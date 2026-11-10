@@ -1,31 +1,25 @@
-import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   Hammer,
   Layers,
   MessageCircle,
   Phone,
-  Plus,
   Rocket,
   type LucideIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { site } from "@/config/site";
 import { faq } from "@/content/faq";
-import { industries } from "@/content/industries";
-import { industryIcon } from "@/components/site/industryIcons";
 import { plansNote } from "@/content/plans";
 import { PlanCards } from "@/components/site/PlanCards";
-import { reviewsToShow } from "@/content/reviews";
 import { ReviewsCarousel } from "./ReviewsCarousel";
 import { ServicePanels } from "@/components/site/ServicePanels";
 import { PillLink, pillButton } from "@/components/site/Button";
 import { Accordion, SegmentedTabs } from "@/components/site/Interactive";
 import { Logo } from "@/components/site/Logo";
-import { PillBadge, Reveal, Section, SectionHeading } from "@/components/site/primitives";
+import { Reveal, Section, SectionHeading } from "@/components/site/primitives";
 import { StatementWave } from "./StatementWave";
 import { FeaturedStudies } from "@/components/site/FeaturedStudies";
-import { cn } from "@/lib/utils";
 import {
   AutomationUI,
   BookingSiteUI,
@@ -56,49 +50,7 @@ function ExternalPill({
 }
 
 /* 2. Industries strip */
-
-const tileCls =
-  "group flex h-full flex-col items-center justify-center gap-2.5 rounded-card-sm border border-border bg-background p-6 text-center transition-shadow duration-300 hover:shadow-soft";
-
-export function IndustriesStrip() {
-  return (
-    <section
-      aria-labelledby="industries-title"
-      className="relative z-10 bg-bg-soft pt-4 pb-[72px] md:pb-[120px]"
-    >
-      <div className="container-site">
-        <h2
-          id="industries-title"
-          className="text-center type-small font-medium text-muted-foreground"
-        >
-          Built for businesses that run on calls and bookings
-        </h2>
-        <ul className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-6">
-          {industries.map((ind, i) => {
-            const Icon = industryIcon[ind.icon];
-            return (
-              <Reveal as="li" key={ind.slug} delay={(i % 6) * 60}>
-                <Link to={ind.to} className={tileCls}>
-                  <Icon aria-hidden className="size-6 text-ink" strokeWidth={1.5} />
-                  <span className="text-[15px] leading-tight font-medium text-ink">{ind.name}</span>
-                </Link>
-              </Reveal>
-            );
-          })}
-          <Reveal as="li" delay={300}>
-            <Link to="/book" className={tileCls}>
-              <Plus aria-hidden className="size-6 text-ink" strokeWidth={1.5} />
-              <span className="text-[15px] leading-tight font-medium text-ink">Your business?</span>
-              <span className="type-small text-muted-foreground">
-                Any business that takes bookings
-              </span>
-            </Link>
-          </Reveal>
-        </ul>
-      </div>
-    </section>
-  );
-}
+export { IndustriesStrip } from "./IndustriesStrip";
 
 /* 3. Who we are */
 export function WhoWeAre() {
@@ -249,14 +201,26 @@ export function PlansPreview() {
   );
 }
 
-/* 10. Reviews: hidden in production until real reviews exist; sample cards on the dev server only */
+/* 10. Reviews: video-style smooth customer stories */
 export function Reviews() {
-  const list = reviewsToShow(import.meta.env.DEV);
-  if (!list.length) return null;
   return (
-    <Section theme="soft">
-      <SectionHeading title="What our clients say" />
-      <ReviewsCarousel reviews={list} />
+    <Section theme="soft" aria-labelledby="testimonials-heading">
+      <div className="mb-10 text-center md:mb-14">
+        <span className="inline-flex items-center rounded-full border border-border bg-background px-3.5 py-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase shadow-xs">
+          Testimonials
+        </span>
+        <h2
+          id="testimonials-heading"
+          className="type-h2 mt-3 text-center font-medium tracking-tight text-ink md:text-[44px] lg:text-[48px]"
+        >
+          Real customers. Real results.
+        </h2>
+        <p className="type-body mx-auto mt-3 max-w-xl text-center text-muted-foreground">
+          See how local service businesses save hours, eliminate missed calls, and scale with
+          Incodet.
+        </p>
+      </div>
+      <ReviewsCarousel />
     </Section>
   );
 }

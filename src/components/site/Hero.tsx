@@ -17,6 +17,7 @@ function GlassToggle({ mode, onToggle }: { mode: "day" | "dark"; onToggle: () =>
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? "day" : "night"} mode`}
       onClick={onToggle}
+      suppressHydrationWarning
       className={cn(
         "group relative flex h-[52px] w-[152px] cursor-pointer items-center rounded-full p-1 select-none",
         "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
@@ -51,6 +52,7 @@ function GlassToggle({ mode, onToggle }: { mode: "day" | "dark"; onToggle: () =>
 
       {/* Sliding Glass Lens Thumb */}
       <div
+        suppressHydrationWarning
         className={cn(
           "relative flex size-[44px] items-center justify-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
           isDark
@@ -142,6 +144,7 @@ export function Hero() {
       ref={sectionRef}
       data-theme="dark"
       aria-labelledby="hero-title"
+      suppressHydrationWarning
       className="hero relative flex h-svh min-h-[640px] w-full items-center justify-center overflow-hidden bg-dark"
     >
       {/* Blur overlays top and bottom per instruction */}
@@ -151,6 +154,7 @@ export function Hero() {
       {/* Hero background videos for Light and Dark modes with pull-down transition physics */}
       <div
         aria-hidden
+        suppressHydrationWarning
         className={cn("hero-bg bg-front origin-center overflow-hidden", isPulling && "pull-down")}
       >
         <video
@@ -161,6 +165,7 @@ export function Hero() {
           loop
           muted
           playsInline
+          suppressHydrationWarning
           poster="/images/hero/hero-bg.jpg"
           className={cn(
             "pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out",
@@ -175,6 +180,7 @@ export function Hero() {
           loop
           muted
           playsInline
+          suppressHydrationWarning
           poster="/images/hero/hero-bg-night.jpg"
           className={cn(
             "pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out",

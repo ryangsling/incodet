@@ -127,16 +127,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
+    <html lang="en" suppressHydrationWarning>
+      <head suppressHydrationWarning>
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var _f=window.fetch;Object.defineProperty(window,'fetch',{configurable:true,enumerable:true,get:function(){return _f;},set:function(v){_f=v;}});}catch(e){}})();`,
           }}
         />
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
@@ -172,7 +173,7 @@ function RootComponent() {
         Skip to content
       </a>
       {!isAdmin && !isDeck && <TopBar />}
-      <main id="main">
+      <main id="main" suppressHydrationWarning>
         <Outlet />
       </main>
       {!isAdmin && !isDeck && <Footer />}
