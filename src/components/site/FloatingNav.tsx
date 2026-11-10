@@ -59,7 +59,7 @@ export function FloatingNav() {
         <div
           ref={navRef}
           className={cn(
-            "pointer-events-auto flex h-14 w-full items-center justify-between rounded-full pr-2 pl-5 shadow-pill transition-colors duration-500 md:w-[360px]",
+            "pointer-events-auto flex h-11 w-full max-w-[310px] items-center justify-between rounded-full pr-1.5 pl-3.5 shadow-pill transition-colors duration-500 md:w-[310px]",
             inverted ? "bg-background text-ink" : "bg-dark text-on-dark",
           )}
         >
@@ -67,7 +67,7 @@ export function FloatingNav() {
             <Logo variant="mark" tone={inverted ? "ink" : "white"} />
           </Link>
           <span
-            className="type-small font-medium tabular-nums"
+            className="text-[13px] font-medium tabular-nums"
             aria-label={`Page scrolled ${pct}%`}
           >
             {pct}%
@@ -75,7 +75,7 @@ export function FloatingNav() {
           <div className="flex items-center">
             <span
               aria-hidden
-              className={cn("mr-1 h-6 w-px", inverted ? "bg-border" : "bg-on-dark/25")}
+              className={cn("mr-1 h-4 w-px", inverted ? "bg-border" : "bg-on-dark/25")}
             />
             <button
               ref={menuBtn}
@@ -83,11 +83,11 @@ export function FloatingNav() {
               aria-haspopup="dialog"
               aria-expanded={open}
               className={cn(
-                "flex h-10 items-center gap-2 rounded-full px-4 type-small font-medium transition-colors",
+                "flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors",
                 inverted ? "hover:bg-bg-soft" : "hover:bg-on-dark/10",
               )}
             >
-              Menu <Menu aria-hidden className="size-4" />
+              Menu <Menu aria-hidden className="size-3.5" />
             </button>
           </div>
         </div>

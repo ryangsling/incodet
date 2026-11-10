@@ -289,6 +289,76 @@
   transform: none;
 }
 
+/* Hero blur overlays and background */
+.blur-overlay {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 10vh;
+  z-index: 2;
+  pointer-events: none;
+  backdrop-filter: blur(25px) saturate(1.5);
+  -webkit-backdrop-filter: blur(25px) saturate(1.5);
+}
+.blur-overlay-top {
+  top: 0;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+.blur-overlay-bottom {
+  bottom: 0;
+  mask-image: linear-gradient(to top, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 70%, transparent 100%);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+/* Day/Night Transition Easing and CSS Physics */
+:root {
+  --pull-easing: cubic-bezier(0.32, 0, 0.67, 0);
+  --return-easing: cubic-bezier(0.175, 0.885, 0.32, 1.4);
+  --active-toggle: #f5f8ea;
+}
+
+.bg-front {
+  transition:
+    transform 0.5s var(--return-easing),
+    opacity 0.5s ease;
+}
+
+.pull-down {
+  transform: translateY(20vh) scale(1.1) !important;
+  opacity: 0.8 !important;
+  transition:
+    transform 0.3s var(--pull-easing),
+    opacity 0.3s ease !important;
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-hero-title {
+  animation: hero-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-hero-subtitle {
+  animation: hero-in 700ms 150ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-hero-edges {
+  animation: hero-in 700ms 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

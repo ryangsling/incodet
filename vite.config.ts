@@ -56,8 +56,9 @@ export default defineConfig(({ command, mode }) => {
       ignoreOutdatedRequests: true,
     },
     server: {
-      host: "::",
-      port: 8080,
+      host: "0.0.0.0",
+      port: 3000,
+      allowedHosts: true,
       watch: {
         awaitWriteFinish: { stabilityThreshold: 1000, pollInterval: 100 },
         // Build output is rewritten by `bun run build`; watching it crashes the dev server on Windows.
