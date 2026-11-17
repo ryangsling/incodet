@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/config/site";
 import { usePrefersReducedMotion } from "@/hooks/use-motion";
 import { cn } from "@/lib/utils";
+import { Accent } from "./Accent";
 
 const DAY_VIDEO = "/videos/hero/hero-light-boomerang.mp4";
 const NIGHT_VIDEO = "/videos/hero/hero-dark-boomerang.mp4";
@@ -195,7 +196,7 @@ export function Hero() {
           id="hero-title"
           className="type-h1 animate-hero-title max-w-[880px] font-medium tracking-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] lg:text-[76px] lg:leading-[1.06] text-balance"
         >
-          Your Business Never Sleeps
+          Your Business <Accent>Never Sleeps</Accent>
         </h1>
 
         <div className="animate-hero-subtitle mt-5 max-w-[580px] sm:mt-6">

@@ -67,6 +67,7 @@ const all: Industry[] = [
         ai: "Sorry to hear that. I can book a roof inspection for you. What is the property address, and does tomorrow morning or afternoon suit you better?",
         alert: "New inspection booked: roof leak, tomorrow morning.",
       },
+      relatedWork: "summit-ridge-roofing",
     },
   },
   {
@@ -321,6 +322,7 @@ const all: Industry[] = [
         alert: "New appointment: toothache, Wednesday 10:15.",
       },
       note: medicalNote,
+      relatedWork: "northpoint-dental",
     },
   },
   {

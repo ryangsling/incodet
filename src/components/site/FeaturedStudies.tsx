@@ -54,15 +54,15 @@ export function FeaturedStudies() {
       <div className="container-site">
         <div className="mx-auto max-w-3xl text-center">
           <h2 id="featured-title" className="type-h2">
-            Featured case studies
+            Case studies from real client rollouts
           </h2>
           <p className="mt-5 type-body">
-            Selected projects where clear planning, careful design and fast delivery helped local
-            businesses look and work better online.
+            A closer look at how clear scoping, clean engineering, and automated booking workflows
+            helped businesses capture more jobs and cut manual admin.
           </p>
           <PillLink to="/case-studies" variant="secondary" className="mt-7 shadow-soft">
             <Diamond aria-hidden className="size-4" />
-            View all projects
+            Browse all case studies
           </PillLink>
         </div>
         <div className="featured-deck mx-auto mt-12 flex max-w-[1100px] flex-col gap-8">

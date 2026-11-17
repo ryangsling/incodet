@@ -239,7 +239,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
             </div>
             <dl className="flex flex-col gap-4">
               <div className="menu-item" style={stagger(n++)}>
-                <dt className={label}>Drop us a line</dt>
+                <dt className={label}>Email us</dt>
                 <dd className="mt-1 text-[18px]">
                   <a
                     href={`mailto:${site.email}`}
@@ -263,7 +263,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
                 </dd>
               </div>
               <div className="menu-item" style={stagger(n++)}>
-                <dt className={label}>Call us</dt>
+                <dt className={label}>Phone</dt>
                 <dd className="mt-1 text-[18px]">
                   <a
                     href={site.phoneHref}

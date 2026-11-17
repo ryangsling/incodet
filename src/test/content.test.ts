@@ -36,9 +36,17 @@ describe("content visibility", () => {
     expect(staff?.liveUrl).toBeUndefined();
     expect(showcase.map((s) => s.key)).not.toContain("western-cars-staff-registration");
   });
-  it("has 18 case studies and 11 industries", () => {
-    expect(caseStudies).toHaveLength(18);
+  it("has 20 case studies and 11 industries", () => {
+    expect(caseStudies).toHaveLength(20);
     expect(industries).toHaveLength(11);
+  });
+  it("includes Northpoint Dental and Summit Ridge Roofing as Demo projects", () => {
+    const dental = showcase.find((c) => c.key === "northpoint-dental");
+    const roofing = showcase.find((c) => c.key === "summit-ridge-roofing");
+    expect(dental?.badge).toBe("Demo");
+    expect(dental?.url).toBe("https://northpoint-dental.vercel.app/");
+    expect(roofing?.badge).toBe("Demo");
+    expect(roofing?.url).toBe("https://summit-ridge-zeta.vercel.app/");
   });
   it("hides todo FAQ items", () => {
     expect(faq).toHaveLength(9);

@@ -1,13 +1,4 @@
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  CheckCircle2,
-  Circle,
-  CircleDot,
-  Phone,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Circle, CircleDot, Phone } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -224,16 +215,17 @@ export function FloatingProjects() {
   const text = (
     <div className="burst-text relative z-10 mx-auto flex max-w-[620px] flex-col items-center text-center">
       <h2 id="team-title" className="type-h2">
-        Get a full web and AI team for less than hiring in-house
+        One dedicated studio for your website, AI agents &amp; software
       </h2>
       <p className="mt-5 type-body">
-        Local businesses lose calls, bookings and hours juggling freelancers, apps and missed
-        messages. We design, build and run your website and AI agents, so you can focus on the work.
+        Stop stitching together separate freelancers, booking tools, and missed voicemails. We
+        build, connect, and maintain your entire customer setup so every enquiry becomes a booked
+        job.
       </p>
       <PillLink to="/pricing" className="mt-8">
         See plans &amp; pricing
       </PillLink>
-      <p className="mt-10 type-small text-muted-foreground">We are available on socials</p>
+      <p className="mt-10 type-small text-muted-foreground">Connect with us</p>
       <SocialRow className="mt-3 justify-center" />
     </div>
   );
@@ -307,39 +299,236 @@ export function FloatingProjects() {
 /* Arc carousel                                                        */
 /* ------------------------------------------------------------------ */
 
-const STEP_DEG = 12;
+const DARK_CARD_KEYS = new Set([
+  "humandata-labs",
+  "western-cars-redesign-concept",
+  "barkers-executive",
+  "brighton-taxi",
+]);
+
+function SignalIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.5 8C6.5 9 6 10.5 6 12C6 13.5 6.5 15 7.5 16"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.5 6C3 7.5 2 9.5 2 12C2 14.5 3 16.5 4.5 18"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.5 16C17.5 15 18 13.5 18 12C18 10.5 17.5 9 16.5 8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19.5 18C21 16.5 22 14.5 22 12C22 9.5 21 7.5 19.5 6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function DiamondClusterIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M9.5 2L12 4.5L9.5 7L7 4.5L9.5 2Z" fill="currentColor" />
+      <path d="M4.5 7L7 9.5L4.5 12L2 9.5L4.5 7Z" fill="currentColor" />
+      <path d="M14.5 7L17 9.5L14.5 12L12 9.5L14.5 7Z" fill="currentColor" />
+      <path d="M9.5 12L12 14.5L9.5 17L7 14.5L9.5 12Z" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function WorkCarousel() {
   const items = showcase;
   const reduced = usePrefersReducedMotion();
-  const mobile = !useMediaQuery("(min-width: 768px)");
+  const wideDesktop = useMediaQuery("(min-width: 1440px)");
+  const desktop = useMediaQuery("(min-width: 992px)");
+  const tablet = useMediaQuery("(min-width: 480px)");
   const finePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
-  const cardW = mobile ? 300 : 420;
-  const cardH = mobile ? 420 : 560;
-  const gap = mobile ? 16 : 28;
-  const radius = (cardW + gap) / ((STEP_DEG * Math.PI) / 180);
+
+  const cardW = wideDesktop ? 670 : desktop ? 620 : tablet ? 400 : 330;
+  const cardH = wideDesktop ? 760 : desktop ? 720 : tablet ? 480 : 380;
+  const stepDeg = desktop ? 21 : 20;
+  const dragDistancePerCard = Math.max(260, Math.min(cardW * 0.72, 380));
 
   const n = items.length;
-  // Opens on the third card so the wheel always shows cards on both sides.
-  const [pos, setPos] = useState(2);
-  const posRef = useRef(2);
-  const anim = useRef(0);
-  const drag = useRef<{
-    x: number;
-    start: number;
-    lastX: number;
-    lastT: number;
-    v: number;
-    moved: boolean;
-  } | null>(null);
+  // Opens on the third card so the arc always shows cards fanning on both sides.
+  const initialIndex = Math.min(2, Math.max(0, n - 1));
+  const [active, setActive] = useState(initialIndex);
   const [dragging, setDragging] = useState(false);
-  const wheelTimer = useRef(0);
-  const stage = useRef<HTMLDivElement>(null);
-  const cursor = useRef<HTMLDivElement>(null);
-  const cursorTarget = useRef({ x: 0, y: 0 });
-  const cursorPos = useRef({ x: 0, y: 0 });
   const [cursorOn, setCursorOn] = useState(false);
   const [overButton, setOverButton] = useState(false);
+
+  const stage = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const cursor = useRef<HTMLDivElement>(null);
+
+  const currentPosRef = useRef(initialIndex);
+  const targetPosRef = useRef(initialIndex);
+  const activeRef = useRef(initialIndex);
+  const isDraggingRef = useRef(false);
+  const rafRef = useRef(0);
+  const lastFrameTimeRef = useRef(0);
+  const wheelTimerRef = useRef(0);
+
+  const dragRef = useRef<{
+    startX: number;
+    startTarget: number;
+    lastX: number;
+    lastT: number;
+    vx: number;
+    moved: boolean;
+  } | null>(null);
+
+  const cursorTarget = useRef({ x: 0, y: 0 });
+  const cursorPos = useRef({ x: 0, y: 0 });
+
+  /** Shortest signed distance from the wheel position to card i, so the wheel loops both ways. */
+  const offset = useCallback(
+    (i: number, p: number) => {
+      if (n === 0) return 0;
+      const d = (((i - p) % n) + n) % n;
+      return d > n / 2 ? d - n : d;
+    },
+    [n],
+  );
+
+  const computeCardVisuals = useCallback(
+    (d: number) => {
+      const absD = Math.abs(d);
+      const angle = d * stepDeg;
+      const scale = Math.max(0.75, 1 - absD * 0.04);
+
+      let opacity = 1;
+      if (absD >= 2.5) {
+        opacity = 0;
+      } else if (absD > 1.3) {
+        opacity = Math.max(0, 1 - (absD - 1.3) / 1.2);
+      }
+
+      const hidden = absD >= 2.8;
+      const zIndex = Math.round(50 - absD * 10);
+      const status = absD < 0.45 ? "active" : absD < 2 ? "inview" : "not-active";
+
+      return { angle, scale, opacity, hidden, zIndex, status };
+    },
+    [stepDeg],
+  );
+
+  const applyArcStyles = useCallback(
+    (p: number) => {
+      for (let i = 0; i < n; i++) {
+        const el = cardRefs.current[i];
+        if (!el) continue;
+        const d = offset(i, p);
+        const { angle, scale, opacity, hidden, zIndex, status } = computeCardVisuals(d);
+        el.style.transform = `translate3d(-50%, 0px, 0px) rotate(${angle.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+        el.style.opacity = opacity.toFixed(3);
+        el.style.zIndex = String(zIndex);
+        el.style.visibility = hidden ? "hidden" : "visible";
+        el.style.pointerEvents = !hidden && opacity > 0.1 ? "auto" : "none";
+        el.dataset["status"] = status;
+        el.inert = hidden;
+      }
+      if (n > 0) {
+        const nextActive = ((Math.round(p) % n) + n) % n;
+        if (nextActive !== activeRef.current) {
+          activeRef.current = nextActive;
+          setActive(nextActive);
+        }
+      }
+    },
+    [n, offset, computeCardVisuals],
+  );
+
+  const stopLoop = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+  }, []);
+
+  const startLoop = useCallback(() => {
+    if (rafRef.current) return;
+    lastFrameTimeRef.current = performance.now();
+
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTimeRef.current) / 1000));
+      lastFrameTimeRef.current = now;
+
+      if (reduced) {
+        currentPosRef.current = targetPosRef.current;
+        applyArcStyles(currentPosRef.current);
+        rafRef.current = 0;
+        return;
+      }
+
+      const diff = targetPosRef.current - currentPosRef.current;
+      // Snappy direct-tracking follow while dragging, smooth damped spring settle after release
+      const stiffness = isDraggingRef.current ? 22 : 8.5;
+      const factor = 1 - Math.exp(-stiffness * dt);
+      currentPosRef.current += diff * factor;
+
+      if (!isDraggingRef.current && Math.abs(diff) < 0.0005) {
+        currentPosRef.current = targetPosRef.current;
+        applyArcStyles(currentPosRef.current);
+        rafRef.current = 0;
+        return;
+      }
+
+      applyArcStyles(currentPosRef.current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+  }, [applyArcStyles, reduced]);
+
+  // Ensure layout dimensions / media query switches re-apply arc styles cleanly
+  useEffect(() => {
+    applyArcStyles(currentPosRef.current);
+  }, [applyArcStyles, cardW, cardH, stepDeg]);
+
+  useEffect(() => {
+    return () => {
+      stopLoop();
+      window.clearTimeout(wheelTimerRef.current);
+    };
+  }, [stopLoop]);
+
+  // Pointer containment check for floating DRAG badge (syncs with Lenis & scroll)
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
@@ -372,145 +561,145 @@ export function WorkCarousel() {
       window.removeEventListener("resize", checkPointer);
     };
   }, []);
-  /** Shortest signed distance from the wheel position to card i, so the wheel loops both ways. */
-  const offset = (i: number, p: number) => {
-    const d = (((i - p) % n) + n) % n;
-    return d > n / 2 ? d - n : d;
-  };
-
-  const set = (v: number) => {
-    posRef.current = v;
-    setPos(v);
-  };
 
   const animateTo = useCallback(
     (target: number) => {
-      cancelAnimationFrame(anim.current);
-      const t = Math.round(target);
-      if (reduced) {
-        set(t);
-        return;
-      }
-      const from = posRef.current;
-      const start = performance.now();
-      const dur = 520;
-      const step = (now: number) => {
-        const k = Math.min(1, (now - start) / dur);
-        const e = 1 - Math.pow(1 - k, 3);
-        set(from + (t - from) * e);
-        if (k < 1) anim.current = requestAnimationFrame(step);
-      };
-      anim.current = requestAnimationFrame(step);
+      targetPosRef.current = Math.round(target);
+      startLoop();
     },
-    [reduced],
+    [startLoop],
   );
 
-  useEffect(() => () => cancelAnimationFrame(anim.current), []);
-
   const onPointerDown = (e: RPointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("a,button")) return;
-    cancelAnimationFrame(anim.current);
-    drag.current = {
-      x: e.clientX,
-      start: posRef.current,
+    const targetEl = e.target as HTMLElement;
+    if (targetEl.closest('[data-status="active"] a, [data-status="active"] button')) return;
+    window.clearTimeout(wheelTimerRef.current);
+    isDraggingRef.current = true;
+    setDragging(true);
+    dragRef.current = {
+      startX: e.clientX,
+      startTarget: targetPosRef.current,
       lastX: e.clientX,
       lastT: performance.now(),
-      v: 0,
+      vx: 0,
       moved: false,
     };
-    setDragging(true);
     e.currentTarget.setPointerCapture(e.pointerId);
+    startLoop();
   };
+
   const onPointerMove = (e: RPointerEvent<HTMLDivElement>) => {
     cursorTarget.current = { x: e.clientX, y: e.clientY };
-    const d = drag.current;
+    const hit = document.elementFromPoint(e.clientX, e.clientY);
+    setOverButton(Boolean(hit?.closest('[data-status="active"] a, button')));
+    const d = dragRef.current;
     if (!d) return;
-    const dx = e.clientX - d.x;
-    if (Math.abs(dx) > 4) d.moved = true;
+    const dx = e.clientX - d.startX;
+    if (Math.abs(dx) > 5) d.moved = true;
     const now = performance.now();
     const dt = Math.max(1, now - d.lastT);
-    d.v = (e.clientX - d.lastX) / dt;
+    const instantV = (e.clientX - d.lastX) / dt;
+    // Exponential moving average on release velocity for fluid, predictable momentum
+    d.vx = d.vx * 0.6 + instantV * 0.4;
     d.lastX = e.clientX;
     d.lastT = now;
-    set(d.start - dx / (cardW + gap));
+    targetPosRef.current = d.startTarget - dx / dragDistancePerCard;
+    startLoop();
   };
+
   const onPointerUp = (e: RPointerEvent<HTMLDivElement>) => {
-    const d = drag.current;
-    drag.current = null;
+    const d = dragRef.current;
+    dragRef.current = null;
+    isDraggingRef.current = false;
     setDragging(false);
     if (!d) return;
+
     if (!d.moved) {
-      // A click on a side card centers it.
+      // Clicking a flanking card smoothly rotates it to center.
       const card = (document.elementsFromPoint(e.clientX, e.clientY) as HTMLElement[]).find(
         (el) => el.dataset["index"],
       );
-      if (card) animateTo(posRef.current + offset(Number(card.dataset["index"]), posRef.current));
+      if (card) {
+        const idx = Number(card.dataset["index"]);
+        animateTo(currentPosRef.current + offset(idx, currentPosRef.current));
+      } else {
+        animateTo(targetPosRef.current);
+      }
       return;
     }
-    const momentum = reduced ? 0 : (-d.v * 260) / (cardW + gap);
-    animateTo(posRef.current + momentum);
+
+    const rawMomentum = reduced ? 0 : (-d.vx * 260) / dragDistancePerCard;
+    const clampedMomentum = Math.max(-1.8, Math.min(1.8, rawMomentum));
+    animateTo(targetPosRef.current + clampedMomentum);
   };
 
-  // Trackpad horizontal scroll rotates the wheel, then snaps.
+  // Trackpad horizontal scroll smoothly rotates the arc deck, then settles.
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
-      cancelAnimationFrame(anim.current);
-      set(posRef.current + e.deltaX / (cardW + gap));
-      window.clearTimeout(wheelTimer.current);
-      wheelTimer.current = window.setTimeout(() => animateTo(posRef.current), 140);
+      targetPosRef.current += e.deltaX / dragDistancePerCard;
+      startLoop();
+      window.clearTimeout(wheelTimerRef.current);
+      wheelTimerRef.current = window.setTimeout(() => {
+        animateTo(targetPosRef.current);
+      }, 120);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  });
+  }, [animateTo, dragDistancePerCard, startLoop]);
 
-  // DRAG cursor follows the pointer smoothly.
+  // Floating DRAG circle cursor follows the pointer smoothly with damped spring lerp.
   useEffect(() => {
-    if (!cursorOn) return;
+    if (!cursorOn || !finePointer) return;
     let raf = 0;
-    const loop = () => {
+    let lastT = performance.now();
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastT) / 1000));
+      lastT = now;
       const c = cursorPos.current;
       const t = cursorTarget.current;
-      const k = reduced ? 1 : 0.22;
+      const k = reduced ? 1 : 1 - Math.exp(-18 * dt);
       c.x += (t.x - c.x) * k;
       c.y += (t.y - c.y) * k;
-      if (cursor.current)
-        cursor.current.style.transform = `translate3d(${c.x}px, ${c.y}px, 0) translate(-50%, -50%)`;
+      if (cursor.current) {
+        cursor.current.style.transform = `translate3d(${c.x.toFixed(1)}px, ${c.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${isDraggingRef.current ? 0.88 : 1})`;
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [cursorOn, reduced]);
+  }, [cursorOn, finePointer, reduced]);
 
-  const active = ((Math.round(pos) % n) + n) % n;
-  const go = (d: number) => animateTo(Math.round(posRef.current) + d);
-  const showCursor = finePointer && cursorOn && !overButton;
+  const go = (d: number) => animateTo(Math.round(targetPosRef.current) + d);
+  const showCursor = finePointer && cursorOn;
 
   return (
     <section
       aria-labelledby="work-title"
-      className="overflow-hidden bg-background pt-[72px] pb-[72px] md:pt-[120px] md:pb-[100px]"
+      className="overflow-x-clip bg-background pt-[72px] pb-[72px] md:pt-[120px] md:pb-[100px]"
     >
       <div className="container-site">
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 id="work-title" className="type-h2">
-            Explore our latest work across industries
+            Recent launches across live client projects
           </h2>
           <p className="mt-5 type-body">
-            From local service websites to AI tools and custom platforms, see how we turn ideas into
-            fast, easy to use products that win customers.
+            Browse shipped booking websites, internal portals, and AI tools engineered for fast load
+            times, intuitive user flows, and steady daily enquiries.
           </p>
         </Reveal>
       </div>
 
       <div
         ref={stage}
+        id="wfArcStageRoot"
         role="region"
         aria-roledescription="carousel"
         aria-label="Our latest work"
+        data-drag-status={dragging ? "grabbing" : "grab"}
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "ArrowRight") {
@@ -529,139 +718,206 @@ export function WorkCarousel() {
           cursorTarget.current = cursorPos.current = { x: e.clientX, y: e.clientY };
           setCursorOn(true);
         }}
-        onPointerLeave={() => setCursorOn(false)}
+        onPointerLeave={() => {
+          setCursorOn(false);
+          setOverButton(false);
+        }}
         className={cn(
-          "relative isolate mt-10 touch-pan-y select-none md:mt-14",
+          "relative isolate mt-12 touch-pan-y select-none focus-visible:outline-none md:mt-16",
           finePointer && !overButton && "cursor-none",
+          dragging && "cursor-grabbing",
         )}
-        style={{ height: cardH + (mobile ? 90 : 150) }}
+        style={{ height: cardH + (desktop ? 88 : tablet ? 68 : 56) }}
       >
-        {/* Faint dashed arc behind the cards */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 rounded-full border border-dashed border-ink/15"
-          style={{
-            width: (radius - cardH / 2) * 2,
-            height: (radius - cardH / 2) * 2,
-            top: cardH / 2,
-            transform: "translateX(-50%)",
-          }}
-        />
-        {/* Cards fan out and overlap on purpose (opaque, front card on top). */}
-        <ul data-overlap-ok className="absolute inset-x-0 top-0">
+        {/* Arc Deck: ref-driven direct DOM transforms along a 360% pivot arc */}
+        <ul id="wfArcDeck" data-overlap-ok className="relative mx-auto h-full w-full">
           {items.map((it, i) => {
-            const d = offset(i, pos);
-            const hidden = Math.abs(d) > 4;
+            const d = offset(i, initialIndex);
+            const { angle, scale, opacity, hidden, zIndex, status } = computeCardVisuals(d);
             const isActive = i === active;
+            const isDark = DARK_CARD_KEYS.has(it.key);
+            const imgSrc = isDark ? `/images/case-studies/${it.key}.webp` : it.image;
+            const imgSrcSet =
+              !isDark && it.imageLarge ? `${it.image} 800w, ${it.imageLarge} 1600w` : undefined;
+
             return (
               <li
                 key={it.key}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
                 data-index={i}
-                aria-hidden={hidden || undefined}
+                data-status={status}
+                aria-hidden={!isActive || undefined}
                 aria-label={`${i + 1} of ${items.length}: ${it.name}`}
                 className={cn(
-                  "absolute top-0 left-1/2 flex flex-col overflow-hidden rounded-[28px] p-6 md:p-8",
-                  it.tint,
-                  hidden && "invisible",
+                  "group/card absolute top-0 left-1/2 overflow-hidden shadow-[0_28px_70px_-18px_rgba(0,0,0,0.2)] will-change-[transform,opacity]",
+                  "rounded-[20px] sm:rounded-[32px] lg:rounded-[40px]",
+                  isDark ? "bg-[#0c0e14] text-white" : cn(it.tint, "text-ink"),
                 )}
                 style={{
                   width: cardW,
                   height: cardH,
-                  marginLeft: -cardW / 2,
-                  transformOrigin: `50% ${radius}px`,
-                  transform: `rotate(${d * STEP_DEG}deg)`,
-                  zIndex: 100 - Math.round(Math.abs(d) * 10),
+                  transformOrigin: "50% 360%",
+                  transform: `translate3d(-50%, 0px, 0px) rotate(${angle.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+                  opacity: opacity.toFixed(3),
+                  zIndex,
+                  visibility: hidden ? "hidden" : "visible",
+                  pointerEvents: !hidden && opacity > 0.1 ? "auto" : "none",
                 }}
               >
-                <div className="pointer-events-none flex items-center gap-2">
-                  <span
-                    aria-hidden
-                    className="flex size-7 items-center justify-center rounded-full bg-live"
-                  >
-                    <span className="size-2.5 rounded-full bg-on-dark" />
-                  </span>
-                  <span
-                    className={cn(
-                      "rounded-full px-3 py-1 type-small font-medium text-ink",
-                      it.badge === "Live Now" ? "bg-background" : "bg-muted",
-                    )}
-                  >
-                    {it.badge}
-                  </span>
-                </div>
-                <h3 className="pointer-events-none mt-5 text-[24px] leading-tight font-medium text-ink md:text-[28px]">
-                  {it.name}
-                </h3>
-                <p className="pointer-events-none mt-2 line-clamp-2 type-small-body text-body">
-                  {it.description}
-                </p>
-                <div className="carousel-shot pointer-events-none relative -mx-6 mt-5 flex-1 overflow-hidden md:-mx-8">
+                {/* Subtle atmospheric radial depth behind card content */}
+                <div
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-0",
+                    isDark
+                      ? "bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.09),transparent_60%)]"
+                      : "bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.5),transparent_65%)]",
+                  )}
+                />
+
+                {/* Full-bleed lower showcase artwork melting softly into the card surface */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] overflow-hidden"
+                  style={{
+                    maskImage:
+                      "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.88) 16%, #000 32%, #000 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.88) 16%, #000 32%, #000 100%)",
+                  }}
+                >
                   <img
-                    src={it.image}
-                    srcSet={it.imageLarge ? `${it.image} 800w, ${it.imageLarge} 1600w` : undefined}
-                    sizes="(min-width: 768px) 567px, 135vw"
-                    alt={`${it.name} website`}
+                    src={imgSrc}
+                    srcSet={imgSrcSet}
+                    sizes="(max-width: 479px) 330px, (max-width: 991px) 400px, 670px"
+                    alt={`${it.name} preview`}
                     loading="lazy"
                     decoding="async"
                     width={800}
                     height={500}
                     draggable={false}
-                    className="absolute top-0 left-1/2 w-[135%] max-w-none -translate-x-1/2"
+                    className={cn(
+                      "size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-[1.03]",
+                      isDark ? "object-top" : "object-center",
+                    )}
                   />
                 </div>
-                <a
-                  href={it.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={isActive ? 0 : -1}
-                  onPointerEnter={() => setOverButton(true)}
-                  onPointerLeave={() => setOverButton(false)}
-                  className="absolute bottom-5 left-1/2 inline-flex h-11 -translate-x-1/2 cursor-pointer items-center gap-2 rounded-full bg-background px-5 type-small font-medium whitespace-nowrap text-ink shadow-soft transition-transform hover:-translate-y-0.5 md:bottom-7"
-                >
-                  View Project <ArrowUpRight aria-hidden className="size-4" />
-                  <span className="sr-only">(opens in a new tab)</span>
-                </a>
+
+                {/* Soft bottom vignette so the white pill CTA always reads crisply */}
+                <div
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-x-0 bottom-0 h-[120px]",
+                    isDark
+                      ? "bg-gradient-to-t from-[#0c0e14]/85 via-[#0c0e14]/35 to-transparent"
+                      : "bg-gradient-to-t from-black/10 via-transparent to-transparent",
+                  )}
+                />
+
+                {/* Centered card content stack matching arc-card-content */}
+                <div className="relative z-10 flex size-full flex-col items-center justify-between px-4 pt-4 pb-4 sm:p-[26px] lg:p-[40px]">
+                  <div className="pointer-events-none flex flex-col items-center justify-center gap-2 sm:gap-4 lg:gap-8">
+                    {/* Twin red icon pill + white status tag */}
+                    <div className="flex items-center justify-start gap-px">
+                      <div className="flex h-[30px] items-center justify-center rounded-full bg-[#ff3333] px-2.5 text-white sm:h-[34px] sm:px-4 lg:h-[42px] lg:px-5">
+                        <SignalIcon className="size-4 sm:size-5 lg:size-6" />
+                      </div>
+                      <div className="flex h-[30px] items-center justify-center rounded-full bg-white px-3 shadow-[0_2px_10px_rgba(0,0,0,0.06)] sm:h-[34px] sm:px-4 lg:h-[42px] lg:px-5">
+                        <span className="text-[12px] font-medium tracking-[-0.02em] text-[#0a0a0a]/85 sm:text-[13px] lg:text-[15px]">
+                          {it.badge}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Centered Heading & Description */}
+                    <div className="flex w-full max-w-[540px] flex-col items-center text-center gap-1.5 sm:gap-2.5 lg:gap-4">
+                      <h3
+                        className={cn(
+                          "text-[21px] leading-[1.1] font-medium tracking-[-0.02em] sm:text-[26px] lg:text-[32px]",
+                          isDark ? "text-white" : "text-[#0a0a0a]",
+                        )}
+                      >
+                        {it.name}
+                      </h3>
+                      <p
+                        className={cn(
+                          "line-clamp-3 text-[13px] leading-[1.42] sm:text-[15px] lg:text-[19px] lg:leading-[1.45]",
+                          isDark ? "text-white/75" : "text-[#0a0a0a]/80",
+                        )}
+                      >
+                        {it.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* White pill CTA button with circular icon badge */}
+                  <a
+                    href={it.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={isActive ? 0 : -1}
+                    onPointerEnter={() => setOverButton(true)}
+                    onPointerLeave={() => setOverButton(false)}
+                    onClick={(e) => {
+                      if (!isActive) {
+                        e.preventDefault();
+                      }
+                    }}
+                    className={cn(
+                      "group/btn relative z-20 inline-flex cursor-pointer items-center justify-center overflow-clip rounded-full bg-white text-[#0a0a0a]/90",
+                      "shadow-[0_12px_28px_-6px_rgba(0,0,0,0.22),0_2px_5px_rgba(0,0,0,0.1)]",
+                      "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-6px_rgba(0,0,0,0.28)] active:scale-[0.98]",
+                    )}
+                  >
+                    <span className="flex items-center gap-2.5 py-1.5 pr-2 pl-4 sm:gap-3 sm:py-2 sm:pr-2.5 sm:pl-6">
+                      <span className="text-[13px] font-medium whitespace-nowrap text-[#0a0a0a]/90 sm:text-[15px] lg:text-[16px]">
+                        View Project
+                      </span>
+                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#f3f4f6] text-[#0a0a0a] transition-transform duration-300 group-hover/btn:rotate-45 group-hover/btn:scale-105 sm:size-8 lg:size-9">
+                        <DiamondClusterIcon className="size-4 sm:size-[18px]" />
+                      </span>
+                    </span>
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </a>
+                </div>
               </li>
             );
           })}
         </ul>
 
+        {/* Floating DRAG badge cursor (92px circle + two 12px flanking dots) */}
         {finePointer &&
           cursorOn &&
           createPortal(
             <div
               ref={cursor}
+              id="wfDragBadge"
               aria-hidden
               data-carousel-cursor
-              className={cn(
-                "pointer-events-none fixed top-0 left-0 z-[9000] size-16 transition-opacity duration-200",
-                showCursor ? "opacity-100" : "opacity-0",
-              )}
+              className="pointer-events-none fixed top-0 left-0 z-[9999] flex h-[110px] w-[166px] items-center justify-center gap-4 will-change-[transform,opacity] transition-opacity duration-200 ease-out"
+              style={{
+                opacity: showCursor ? (overButton ? 0.15 : 1) : 0,
+                transform: `translate3d(${cursorPos.current.x.toFixed(1)}px, ${cursorPos.current.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${dragging ? 0.88 : 1})`,
+              }}
             >
-              <div className="relative">
-                <span
-                  className="absolute top-1/2 left-1/2 size-1.5 -translate-y-1/2 rounded-full bg-ink transition-transform duration-300"
-                  style={{ transform: `translate(${dragging ? -58 : -44}px, -50%)` }}
-                />
-                <span className="flex size-16 items-center justify-center rounded-full bg-ink text-[13px] font-semibold tracking-wide text-primary-foreground">
-                  DRAG
-                </span>
-                <span
-                  className="absolute top-1/2 left-1/2 size-1.5 rounded-full bg-ink transition-transform duration-300"
-                  style={{ transform: `translate(${dragging ? 52 : 38}px, -50%)` }}
-                />
+              <div className="size-3 shrink-0 rounded-full bg-dark" />
+              <div className="flex size-[92px] shrink-0 items-center justify-center rounded-full bg-dark text-[13px] leading-[1.2] font-medium tracking-[0.04em] uppercase text-white shadow-[0_16px_32px_-8px_rgba(0,0,0,0.3)]">
+                <div>DRAG</div>
               </div>
+              <div className="size-3 shrink-0 rounded-full bg-dark" />
             </div>,
             document.body,
           )}
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-3">
+      <div className="relative z-20 mt-4 flex items-center justify-center gap-3">
         <button
           type="button"
           onClick={() => go(-1)}
           aria-label="Previous project"
-          className="flex size-12 items-center justify-center rounded-full border border-border bg-background text-ink transition-colors hover:bg-bg-soft disabled:opacity-40"
+          className="flex size-12 cursor-pointer items-center justify-center rounded-full border border-border bg-background text-ink transition-all duration-200 hover:scale-105 hover:bg-bg-soft active:scale-95 disabled:opacity-40"
         >
           <ArrowLeft aria-hidden className="size-5" />
         </button>
@@ -675,7 +931,7 @@ export function WorkCarousel() {
           type="button"
           onClick={() => go(1)}
           aria-label="Next project"
-          className="flex size-12 items-center justify-center rounded-full border border-border bg-background text-ink transition-colors hover:bg-bg-soft disabled:opacity-40"
+          className="flex size-12 cursor-pointer items-center justify-center rounded-full border border-border bg-background text-ink transition-all duration-200 hover:scale-105 hover:bg-bg-soft active:scale-95 disabled:opacity-40"
         >
           <ArrowRight aria-hidden className="size-5" />
         </button>

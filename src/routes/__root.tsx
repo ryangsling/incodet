@@ -20,6 +20,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { supabase } from "@/integrations/supabase/client";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
+import { ChatWidget } from "@/components/site/ChatWidget";
 
 function NotFoundComponent() {
   return (
@@ -109,12 +110,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
-        { rel: "manifest", href: "/site.webmanifest" },
-        { rel: "preconnect", href: "https://api.fontshare.com" },
-        { rel: "preconnect", href: "https://cdn.fontshare.com", crossOrigin: "anonymous" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "preload",
+          as: "style",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&display=swap",
+        },
         {
           rel: "stylesheet",
-          href: "https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&display=swap",
         },
       ],
     };
@@ -177,7 +182,12 @@ function RootComponent() {
         <Outlet />
       </main>
       {!isAdmin && !isDeck && <Footer />}
-      {!isAdmin && !isPortalApp && !isDeck && <FloatingNav />}
+      {!isAdmin && !isPortalApp && !isDeck && (
+        <>
+          <FloatingNav />
+          <ChatWidget />
+        </>
+      )}
       <Toaster position="top-center" />
       {!isAdmin && !isDeck && <CookieConsent />}
     </QueryClientProvider>

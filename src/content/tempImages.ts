@@ -17,27 +17,27 @@ const industry = { widths: [400, 800], w: 400, h: 440 };
 export const tempImages = {
   "industry-roofing": {
     ...industry,
-    alt: "Roofer on a residential pitched roof inspecting slate tiles",
+    alt: "Two roofers in hard hats and harnesses working on timber roof battens",
   },
   "industry-epoxy-flooring": {
     ...industry,
-    alt: "Seamless high-gloss epoxy flooring installation",
+    alt: "Swirling blue and teal glossy epoxy floor finish inside a modern room",
   },
   "industry-salons": {
     ...industry,
-    alt: "Modern hair and beauty salon styling station with mirrors",
+    alt: "Modern hair and beauty salon interior with styling chairs and lit mirrors",
   },
   "industry-barber-shops": {
     ...industry,
-    alt: "Classic leather barber chair in an upscale grooming shop",
+    alt: "Barber styling and blow-drying a client's fade haircut",
   },
   "industry-clinics": {
     ...industry,
-    alt: "Bright and modern dental and medical clinic treatment room",
+    alt: "Doctor in white coat consulting warmly with a patient in a bright clinic",
   },
   "industry-custom": {
     ...industry,
-    alt: "Modern workspace with digital devices ready for custom business setup",
+    alt: "Business owners shaking hands in silhouette inside a bright glass office",
   },
   "calling-phone-desk": {
     ...tile,

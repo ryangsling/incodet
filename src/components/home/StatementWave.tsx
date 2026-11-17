@@ -97,10 +97,10 @@ export function StatementWave() {
     <section ref={root} className="statement-wave bg-background" aria-labelledby="who-title">
       <div className="container-site mx-auto text-center">
         <span data-wave-label className="inline-block">
-          <PillBadge>Who we are</PillBadge>
+          <PillBadge>How Incodet works</PillBadge>
         </span>
         <h2 id="who-title" className="sr-only">
-          Who we are
+          How Incodet works
         </h2>
         <div className="wave-layout relative mx-auto mt-8">
           <p className="sr-only">{sentence}</p>

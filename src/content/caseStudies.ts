@@ -56,7 +56,7 @@ const categoryFor: Record<CaseStudyType, string> = {
 };
 
 /* Tint classes used via make() (listed so Tailwind generates them):
-   bg-tint-western-cars-haywards-heath bg-tint-western-cars-pulborough bg-tint-western-cars-content-hub bg-tint-brighton-taxi bg-tint-western-cars-crawley bg-tint-western-cars-east-grinstead bg-tint-western-cars-horley bg-tint-western-cars-horsham bg-tint-western-cars-redesign-concept bg-tint-western-cars-staff-registration bg-tint-humandata-labs bg-tint-bloom-studio bg-tint-barkers-executive bg-tint-brhex-studio bg-tint-gm-taxis-lewes bg-tint-a1-airport-cars bg-tint-incblog bg-tint-incodere bg-tint-vyra-shops */
+   bg-tint-western-cars-haywards-heath bg-tint-western-cars-pulborough bg-tint-western-cars-content-hub bg-tint-brighton-taxi bg-tint-western-cars-crawley bg-tint-western-cars-east-grinstead bg-tint-western-cars-horley bg-tint-western-cars-horsham bg-tint-western-cars-redesign-concept bg-tint-western-cars-staff-registration bg-tint-humandata-labs bg-tint-bloom-studio bg-tint-barkers-executive bg-tint-brhex-studio bg-tint-gm-taxis-lewes bg-tint-a1-airport-cars bg-tint-northpoint-dental bg-tint-summit-ridge-roofing bg-tint-incblog bg-tint-incodere bg-tint-vyra-shops */
 const make = (c: Input): CaseStudy => ({
   ...c,
   category: c.category ?? categoryFor[c.type],
@@ -274,6 +274,52 @@ const all: CaseStudy[] = [
   }),
 
   /* Other clients */
+  make({
+    slug: "northpoint-dental",
+    name: "Northpoint Dental",
+    type: "Demo",
+    group: "other",
+    category: "Dental clinic website",
+    period: "Nov 2026",
+    end: "2026-11",
+    laptopOnly: true,
+    liveUrl: "https://northpoint-dental.vercel.app/",
+    description:
+      "A sample private dental clinic website for Leeds where patients choose their dentist, see transparent treatment pricing upfront, ask Ava in chat, and book online in under a minute.",
+    challenge:
+      "New patients put off check-ups or urgent dental care when practices hide pricing behind phone calls or force callers to wait just to check dentist availability.",
+    solution:
+      "A calm, transparent dental clinic website featuring upfront treatment fees, clinician-level live slot previews, a quick appointment selector, and Ask Ava chat assistance around the clock.",
+    highlights: [
+      "Clinician selection with live next-available slots",
+      "Transparent upfront pricing across all treatments",
+      "Ask Ava AI chat assistant & 1-minute booking flow",
+    ],
+    tags: ["Next.js", "Online Booking", "AI Chat"],
+  }),
+  make({
+    slug: "summit-ridge-roofing",
+    name: "Summit Ridge Roofing",
+    type: "Demo",
+    group: "other",
+    category: "Roofing contractor website",
+    period: "Nov 2026",
+    end: "2026-11",
+    laptopOnly: true,
+    liveUrl: "https://summit-ridge-zeta.vercel.app/",
+    description:
+      "A sample Dallas roofing website built to capture storm damage and replacement leads through a one-minute address estimate form, financing guide, and 24/7 AI receptionist.",
+    challenge:
+      "Roofing crews miss high-intent repair and storm damage calls while up on roofs, and homeowners rarely leave a voicemail when they need an inspection quickly.",
+    solution:
+      "A high-converting roofing site pairing a property-address estimate builder and interactive price calculator with online inspection booking and a 24/7 AI phone and chat receptionist.",
+    highlights: [
+      "One-minute property-address roof estimate form",
+      "24/7 AI receptionist for storm & after-hours calls",
+      "Interactive cost guide, financing preview & booking",
+    ],
+    tags: ["Next.js", "24/7 AI Receptionist", "Lead Capture"],
+  }),
   make({
     slug: "humandata-labs",
     name: "HumanData Labs",

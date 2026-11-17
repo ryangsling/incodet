@@ -37,22 +37,22 @@ const tagIcons: LucideIcon[] = [Layers, Smartphone, MessageCircle, Bell, Workflo
 const process = [
   {
     title: "Discovery Call",
-    body: "We learn your business, your customers and what you need. Free, no commitment.",
+    body: "Tell us how calls, quotes, and bookings work today in a free 30-minute chat.",
     icon: CalendarDays,
   },
   {
     title: "Plan & Design",
-    body: "We map the features, design the screens and agree on scope before building.",
+    body: "We map every screen, call script, and delivery milestone with a fixed quote before building.",
     icon: Layers,
   },
   {
-    title: "Build & Integrate",
-    body: "We build, connect your tools and show you progress every week.",
+    title: "Build & Connect",
+    body: "We develop your site, train your AI agents, and link your calendar with weekly demos.",
     icon: Hammer,
   },
   {
-    title: "Launch & Support",
-    body: "We go live, test everything and stay on to support and improve it.",
+    title: "Launch & Care",
+    body: "We test every flow end to end, push live, and stay on for hosting and ongoing updates.",
     icon: Rocket,
   },
 ];

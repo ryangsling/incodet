@@ -5,6 +5,7 @@ import { PillButton, PillLink } from "@/components/site/Button";
 import { SectionHeading } from "@/components/site/primitives";
 import { loadScrollMotion } from "@/lib/scroll-motion";
 import { PIN_QUERY } from "@/hooks/use-motion";
+import { Accent } from "@/components/site/Accent";
 import { cn } from "@/lib/utils";
 
 const icons = { hammer: Hammer, layers: Layers, phone: Phone, rocket: Rocket };
@@ -177,8 +178,8 @@ export function ScrollProcess() {
       aria-label="How it works"
     >
       <div className="container-site">
-        <SectionHeading title="How it works">
-          A simple process, from first call to launch.
+        <SectionHeading title="How we deliver">
+          Four clear steps from first chat to <Accent>going live</Accent>.
         </SectionHeading>
         <div
           ref={panel}

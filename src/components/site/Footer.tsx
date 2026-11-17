@@ -86,7 +86,7 @@ export function Footer() {
             </p>
             <dl className="mt-10 grid gap-6 sm:grid-cols-2">
               <div>
-                <dt className="type-small text-muted-foreground">Drop us a line</dt>
+                <dt className="type-small text-muted-foreground">Email us</dt>
                 <dd className="mt-1">
                   <a
                     href={`mailto:${site.email}`}
@@ -97,7 +97,7 @@ export function Footer() {
                 </dd>
               </div>
               <div>
-                <dt className="type-small text-muted-foreground">Call us</dt>
+                <dt className="type-small text-muted-foreground">Phone</dt>
                 <dd className="mt-1">
                   <a
                     href={site.phoneHref}
@@ -108,7 +108,7 @@ export function Footer() {
                 </dd>
               </div>
               <div>
-                <dt className="type-small text-muted-foreground">Message us</dt>
+                <dt className="type-small text-muted-foreground">Direct chat</dt>
                 <dd className="mt-1">
                   <a
                     href={site.whatsapp}
@@ -175,7 +175,7 @@ export function Footer() {
               </li>
             </FooterCol>
             {activeSocials.length > 0 && (
-              <FooterCol title="Follow Us">
+              <FooterCol title="Socials">
                 {activeSocials.map((s) => (
                   <li key={s.key}>
                     <a

@@ -20,6 +20,7 @@ import { Logo } from "@/components/site/Logo";
 import { Reveal, Section, SectionHeading } from "@/components/site/primitives";
 import { StatementWave } from "./StatementWave";
 import { FeaturedStudies } from "@/components/site/FeaturedStudies";
+import { Accent } from "@/components/site/Accent";
 import {
   AutomationUI,
   BookingSiteUI,
@@ -109,36 +110,40 @@ export function Services() {
 const steps: { title: string; body: string; icon: LucideIcon; ui: () => ReactNode }[] = [
   {
     title: "Discovery Call",
-    body: "We learn your business, your customers and what you need. Free, no commitment.",
+    body: "Tell us how calls, quotes, and bookings work today in a free 30-minute chat.",
     icon: Phone,
     ui: DiscoveryUI,
   },
   {
     title: "Plan & Design",
-    body: "We map the features, design the screens and agree on scope before building.",
+    body: "We map every screen, call script, and delivery milestone with a fixed quote before building.",
     icon: Layers,
     ui: PlanUI,
   },
   {
-    title: "Build & Integrate",
-    body: "We build, connect your tools and show you progress every week.",
+    title: "Build & Connect",
+    body: "We develop your site, train your AI agents, and link your calendar with weekly demos.",
     icon: Hammer,
     ui: BuildUI,
   },
   {
-    title: "Launch & Support",
-    body: "We go live, test everything and stay on to support and improve it.",
+    title: "Launch & Care",
+    body: "We test every flow end to end, push live, and stay on for hosting and ongoing updates.",
     icon: Rocket,
     ui: LaunchUI,
   },
 ];
 
 export function Process({
-  title = "How it works",
-  intro = "A simple process, from first call to launch.",
+  title = "How we deliver",
+  intro = (
+    <>
+      Four clear steps from first chat to <Accent>going live</Accent>.
+    </>
+  ),
 }: {
   title?: string;
-  intro?: string;
+  intro?: ReactNode;
 }) {
   return (
     <Section>
@@ -185,7 +190,9 @@ export function PlansPreview() {
   return (
     <Section>
       <Reveal className="text-center">
-        <h2 className="type-h2">Pay for what you use. Nothing more.</h2>
+        <h2 className="type-h2">
+          Pay for <Accent>what you use</Accent>. Nothing more.
+        </h2>
         <p className="mt-4 type-small text-muted-foreground">All prices in USD.</p>
       </Reveal>
       <div className="mt-12">
@@ -271,7 +278,8 @@ export function BookingCta({ service }: { service?: string } = {}) {
               Book a free call
             </h2>
             <p className="mx-auto mt-5 max-w-xl type-body text-on-dark-muted">
-              We learn your business, your customers and what you need. Free, no commitment.
+              Tell us what your business needs in a quick 30-minute chat—clear plan, transparent
+              pricing, no pressure.
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <PillLink
@@ -283,7 +291,7 @@ export function BookingCta({ service }: { service?: string } = {}) {
                 Book a Free Call
               </PillLink>
               <ExternalPill href={site.whatsapp} variant="secondary-inverted">
-                <MessageCircle aria-hidden className="size-4" /> Chat on WhatsApp
+                <MessageCircle aria-hidden className="size-4" /> Message on WhatsApp
               </ExternalPill>
             </div>
           </div>

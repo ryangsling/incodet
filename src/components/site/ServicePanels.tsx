@@ -126,7 +126,7 @@ export function ServicePanels() {
               </p>
               <PillLink to={s.to} variant="primary-inverted" size="sm" className="self-start">
                 <DiamondDots />
-                Get Started
+                Explore service
               </PillLink>
               <p className="service-panel-copy max-w-md type-small-body">{s.description}</p>
             </div>

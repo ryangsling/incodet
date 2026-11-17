@@ -3,6 +3,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
 import { industryCards, type IndustryCardItem } from "@/content/industryCards";
 import { TempImage } from "@/components/site/TempImage";
+import { Accent } from "@/components/site/Accent";
 import { cn } from "@/lib/utils";
 
 export function IndustriesStrip() {
@@ -57,14 +58,14 @@ export function IndustriesStrip() {
     >
       <div className="container-site">
         {/* Section Heading - reserved height layout */}
-        <div className="mb-10 min-h-[120px] text-center md:mb-12 md:text-left">
+        <div className="mx-auto mb-10 min-h-[120px] max-w-3xl text-center md:mb-12">
           <span className="type-small font-semibold tracking-wider text-muted-foreground uppercase">
             Industries
           </span>
           <h2 id="industries-title" className="type-h2 mt-2 font-medium tracking-tight text-ink">
-            Built for businesses like yours
+            Built for businesses <Accent>like yours</Accent>
           </h2>
-          <p className="type-body mx-auto mt-3 max-w-[560px] text-muted-foreground md:mx-0">
+          <p className="type-body mx-auto mt-3 max-w-[560px] text-muted-foreground">
             We set up booking websites, AI chatbots and 24/7 call answering for local service
             businesses. Pick your industry to see how it works.
           </p>
@@ -337,7 +338,7 @@ export function IndustriesStrip() {
         </div>
 
         {/* View all industries text link */}
-        <div className="mt-8 flex justify-center md:justify-end">
+        <div className="mt-8 flex justify-center">
           <Link
             to="/industries"
             className="group inline-flex items-center gap-1.5 type-small font-medium text-ink transition-colors hover:text-accent-from"
