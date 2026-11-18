@@ -11,7 +11,7 @@ const all: FaqItem[] = [
   {
     question: "How does the 24/7 AI calling agent work?",
     answer:
-      "It answers every call, including after hours. It gives callers your business information, books appointments and sends you the details by email or WhatsApp.",
+      "Embedded into your website and connected to your local business phone number (+44 UK, +1 US/Canada, +61 Australia), it answers every call around the clock, syncs timezone-aware bookings straight into your built-in CRM and calendar, and alerts you via email or WhatsApp.",
   },
   {
     question: "What does pay for what you use mean?",
@@ -31,7 +31,8 @@ const all: FaqItem[] = [
   { question: "How can I pay?", answer: "We accept Payoneer, Wise, PayPal and bank transfer." },
   {
     question: "Which countries do you work with?",
-    answer: "We work with businesses in the USA, UK, Canada, Australia and Europe.",
+    answer:
+      "We serve local service businesses across the United Kingdom (+44), United States (+1), Canada (+1), and Australia (+61), with teams across Perth, Leeds, Birmingham, Montreal, and Bangladesh.",
   },
   {
     question: "Who owns the website?",

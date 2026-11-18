@@ -5,6 +5,7 @@ import { loadScrollMotion } from "@/lib/scroll-motion";
 /** Native scrolling remains authoritative for touch, keyboard and reduced motion. */
 export function SmoothScroll() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   useEffect(() => {
     const enabled = window.matchMedia(
       "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
@@ -63,6 +64,17 @@ export function SmoothScroll() {
       enabled.removeEventListener("change", change);
       dispose?.();
     };
+  }, []);
+
+  // Re-sync ScrollTrigger measurements after SPA route changes without recreating Lenis.
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      void loadScrollMotion().then(({ ScrollTrigger }) => {
+        ScrollTrigger.refresh();
+      });
+    });
+    return () => window.cancelAnimationFrame(id);
   }, [pathname]);
+
   return null;
 }

@@ -75,6 +75,7 @@ export function HorizontalScrollCards({ children }: { children: ReactNode[] }) {
       setHeight(window.innerHeight + Math.max(0, dist));
     };
     let raf = 0;
+    let inView = true;
     const update = () => {
       raf = 0;
       const o = outer.current;
@@ -87,19 +88,37 @@ export function HorizontalScrollCards({ children }: { children: ReactNode[] }) {
       t.style.transform = `translate3d(${-p * dist}px,0,0)`;
     };
     const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
+      if (!inView || raf) return;
+      raf = requestAnimationFrame(update);
     };
+    const el = outer.current;
+    const observer =
+      el && typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([entry]) => {
+              inView = Boolean(entry?.isIntersecting);
+              if (inView && !raf) raf = requestAnimationFrame(update);
+            },
+            { rootMargin: "120px 0px" },
+          )
+        : null;
+    if (el && observer) observer.observe(el);
+
     measure();
     update();
     const onResize = () => {
       measure();
-      onScroll();
+      if (!raf) raf = requestAnimationFrame(update);
     };
+    window.addEventListener("incodet:lenis-scroll", onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
+      observer?.disconnect();
+      window.removeEventListener("incodet:lenis-scroll", onScroll);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [pinned, children.length]);
 

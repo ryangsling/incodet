@@ -5,14 +5,23 @@ import { industryIcon } from "@/components/site/industryIcons";
 import { PageHero, seoHead } from "@/components/site/PageHero";
 import { Reveal, Section } from "@/components/site/primitives";
 import { industries } from "@/content/industries";
+import { breadcrumbLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/industries/")({
   staticData: { sitemap: true },
   head: () =>
     seoHead(
-      "Industries We Serve | Incodet",
-      "Booking websites, AI chatbots and a 24/7 AI calling agent for businesses that run on calls and bookings.",
+      "Industries We Serve | UK, USA, Canada & Australia | Incodet",
+      "Custom booking websites with built-in CRM and 24/7 AI voice calling agents (+44 UK, +1 US/CA, +61 AU) built for local service businesses.",
       "/industries",
+      {
+        scripts: [
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Industries", path: "/industries" },
+          ]),
+        ],
+      },
     ),
   component: IndustriesPage,
 });
@@ -21,7 +30,9 @@ function IndustriesPage() {
   return (
     <>
       <PageHero title="Built for businesses that run on calls and bookings">
-        Pick your industry to see how the AI agent answers calls and books appointments for you.
+        Incodet delivers custom booking websites with built-in CRM and 24/7 AI voice calling agents
+        connected to UK (+44), US/Canada (+1), and Australian (+61) phone numbers. Pick your
+        industry below to see how local teams capture missed calls around the clock.
       </PageHero>
       <Section>
         <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

@@ -28,3 +28,31 @@ export const processSteps = [
     images: ["launch-checklist", "go-live", "monthly-report"],
   },
 ] as const;
+
+export const deliverySteps = [
+  {
+    number: "01",
+    title: "Discovery & Audit",
+    description: "We analyze your workflows, bottlenecks, and revenue opportunities.",
+  },
+  {
+    number: "02",
+    title: "Automation Blueprint",
+    description: "We design a detailed automation architecture aligned with KPIs.",
+  },
+  {
+    number: "03",
+    title: "Build & Integration",
+    description: "Our engineers implement AI systems and integrate with your existing tools.",
+  },
+  {
+    number: "04",
+    title: "Testing & Optimization",
+    description: "Performance testing, data validation, refinement.",
+  },
+  {
+    number: "05",
+    title: "Deployment & Scaling",
+    description: "Launch, monitor, and continuously optimize for growth.",
+  },
+] as const;

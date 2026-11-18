@@ -45,6 +45,7 @@ export function useScrollProgress<T extends HTMLElement>(
   cbRef.current = cb;
   useEffect(() => {
     let raf = 0;
+    let inView = true;
     const update = () => {
       raf = 0;
       const el = ref.current;
@@ -61,12 +62,30 @@ export function useScrollProgress<T extends HTMLElement>(
       cbRef.current(Math.min(1, Math.max(0, p)));
     };
     const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
+      if (!inView || raf) return;
+      raf = requestAnimationFrame(update);
     };
+
+    const el = ref.current;
+    const observer =
+      el && typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([entry]) => {
+              inView = Boolean(entry?.isIntersecting);
+              if (inView && !raf) raf = requestAnimationFrame(update);
+            },
+            { rootMargin: "120px 0px" },
+          )
+        : null;
+    if (el && observer) observer.observe(el);
+
     update();
+    window.addEventListener("incodet:lenis-scroll", onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      observer?.disconnect();
+      window.removeEventListener("incodet:lenis-scroll", onScroll);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);

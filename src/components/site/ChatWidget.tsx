@@ -223,8 +223,6 @@ export function ChatWidget() {
     void sendText(input);
   };
 
-  const remaining = Math.max(0, MAX_SESSION_MESSAGES - userCount);
-
   return (
     <>
       {open && (
@@ -233,8 +231,8 @@ export function ChatWidget() {
           aria-modal="true"
           aria-labelledby={titleId}
           className={cn(
-            "fixed inset-0 z-[9300] flex flex-col bg-background pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
-            "md:inset-auto md:right-6 md:bottom-[calc(5.25rem+env(safe-area-inset-bottom))] md:h-[min(600px,calc(100svh-7.5rem))] md:w-[400px] md:rounded-card md:border md:border-border md:pt-0 md:pb-0 md:shadow-[0_24px_64px_-16px_rgba(0,0,0,0.22)]",
+            "fixed inset-0 z-[9300] flex flex-col overflow-hidden bg-background pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
+            "md:inset-auto md:right-6 md:bottom-[calc(5.25rem+env(safe-area-inset-bottom))] md:h-[min(600px,calc(100svh-7.5rem))] md:w-[400px] md:rounded-2xl md:border md:border-border md:pt-0 md:pb-0 md:shadow-[0_24px_64px_-16px_rgba(0,0,0,0.22)]",
           )}
         >
           {/* Header */}
@@ -245,9 +243,9 @@ export function ChatWidget() {
               </span>
               <div>
                 <h2 id={titleId} className="text-[16px] leading-tight font-medium text-ink">
-                  Incodet Assistant
+                  Mary
                 </h2>
-                <p className="type-small text-muted-foreground">Ask about services or pricing</p>
+                <p className="type-small text-muted-foreground">Incodet Assistant</p>
               </div>
             </div>
             <button
@@ -402,7 +400,7 @@ export function ChatWidget() {
               </button>
             </form>
 
-            <div className="mt-2.5 flex items-center justify-between gap-3 px-1">
+            <div className="mt-2.5 flex items-center justify-start px-1">
               <a
                 href={site.whatsapp}
                 target="_blank"
@@ -412,9 +410,6 @@ export function ChatWidget() {
                 <MessageCircle aria-hidden className="size-3.5" />
                 Chat on WhatsApp
               </a>
-              <span className="text-[12px] text-muted-foreground tabular-nums">
-                {remaining} left
-              </span>
             </div>
           </div>
         </section>
@@ -426,7 +421,7 @@ export function ChatWidget() {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
-        aria-label={open ? "Close chat assistant" : "Open chat assistant"}
+        aria-label={open ? "Close chat with Mary" : "Open chat with Mary"}
         className={cn(
           "fixed right-4 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[9150] flex h-11 items-center gap-2 rounded-full bg-dark px-4 text-[14px] font-medium text-on-dark shadow-pill transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]",
           "md:right-6 md:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]",
@@ -441,7 +436,7 @@ export function ChatWidget() {
         ) : (
           <>
             <MessageCircle aria-hidden className="size-4" />
-            <span>Ask Incodet</span>
+            <span>Ask Mary</span>
           </>
         )}
       </button>

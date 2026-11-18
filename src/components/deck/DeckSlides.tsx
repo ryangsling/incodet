@@ -30,6 +30,7 @@ function Image({ src, alt, eager = false }: { src: string; alt: string; eager?: 
       width="1600"
       height="1000"
       loading={eager ? "eager" : "lazy"}
+      decoding="async"
       className="deck-work-image"
     />
   );
@@ -91,6 +92,7 @@ export function createDeckSlides(): DeckSlide[] {
             width="1920"
             height="1080"
             loading="eager"
+            decoding="async"
           />
           <div className="deck-cover-copy">
             <Tag>Company Deck</Tag>
@@ -256,6 +258,7 @@ export function createDeckSlides(): DeckSlide[] {
                   width="640"
                   height="480"
                   loading="lazy"
+                  decoding="async"
                   alt={`${step.title} planning illustration`}
                 />
                 <span className="deck-eyebrow">/0{i + 1}</span>

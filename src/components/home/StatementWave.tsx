@@ -86,7 +86,11 @@ export function StatementWave() {
           ScrollTrigger.refresh();
         },
       );
-      revert = () => mm.revert();
+      revert = () => {
+        mm.revert();
+        ScrollTrigger.getById("statement-wave-pin")?.kill();
+        ScrollTrigger.getById("statement-wave")?.kill();
+      };
     });
     return () => {
       cancelled = true;

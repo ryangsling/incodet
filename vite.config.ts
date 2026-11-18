@@ -1,11 +1,45 @@
+import fs from "node:fs";
+import path from "node:path";
 import { defineConfig, loadEnv, type UserConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 import viteReact from "@vitejs/plugin-react";
 
+function readLocalEnvOverrides(cwd: string): Record<string, string> {
+  const localPath = path.join(cwd, ".env.local");
+  if (!fs.existsSync(localPath)) return {};
+  const out: Record<string, string> = {};
+  for (const rawLine of fs.readFileSync(localPath, "utf8").split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("#")) continue;
+    const eqIdx = line.indexOf("=");
+    if (eqIdx <= 0) continue;
+    const key = line.slice(0, eqIdx).trim();
+    let val = line.slice(eqIdx + 1).trim();
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    if (key && val) out[key] = val;
+  }
+  return out;
+}
+
 export default defineConfig(({ command, mode }) => {
   const isDevBuild = command === "build" && mode === "development";
+
+  // Load server-only env vars from .env / .env.local in dev serve mode (never into client define).
+  if (command === "serve") {
+    const fileEnv = {
+      ...loadEnv(mode, process.cwd(), ""),
+      ...readLocalEnvOverrides(process.cwd()),
+    };
+    for (const [key, value] of Object.entries(fileEnv)) {
+      if (!key.startsWith("VITE_") && value) {
+        process.env[key] = value;
+      }
+    }
+  }
 
   // Expose VITE_* variables to client and server code as import.meta.env.*
   const envDefine: Record<string, string> = {};

@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import type { Service } from "@/content/services";
 import { getCaseStudy, type CaseStudy } from "@/content/caseStudies";
-import { faqLd, seoHead } from "@/lib/seo";
+import { breadcrumbLd, faqLd, seoHead, serviceLd } from "@/lib/seo";
 import { PillButton, PillLink } from "./Button";
 import { ServiceImage, ServicePlaceholder } from "./ServicePanels";
 import { TempImage } from "./TempImage";
@@ -56,10 +56,24 @@ const process = [
     icon: Rocket,
   },
 ];
-export const serviceHead = (service: Service) =>
-  seoHead(`${service.title} | Incodet`, service.description, service.to, {
-    scripts: [faqLd(service.faq)],
+
+export const serviceHead = (service: Service) => {
+  const breadcrumbs =
+    service.to === "/custom-software"
+      ? [
+          { name: "Home", path: "/" },
+          { name: service.title, path: service.to },
+        ]
+      : [
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: service.title, path: service.to },
+        ];
+
+  return seoHead(`${service.title} | Incodet`, service.description, service.to, {
+    scripts: [serviceLd(service), faqLd(service.faq), breadcrumbLd(breadcrumbs)],
   });
+};
 
 // The image covers its box (object-fit: cover): the box is 480px tall from 768px and about 340px on
 // phones, so the wide image renders about 1220px and 860px wide before cropping.
@@ -129,6 +143,7 @@ export function BeforeAfter({
     </div>
   );
 }
+
 export function ServicePage({ service: s }: { service: Service }) {
   const related = s.related.map(getCaseStudy).filter((c): c is CaseStudy => Boolean(c));
   return (
@@ -136,11 +151,13 @@ export function ServicePage({ service: s }: { service: Service }) {
       <section className="bg-hero-sky pt-14 pb-14 md:pt-20 md:pb-16">
         <div className="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
-            <p className="type-small text-muted-foreground">Services</p>
+            <p className="type-small text-muted-foreground">
+              Services · UK, USA, Canada &amp; Australia
+            </p>
             <h1 className="mt-5 text-[40px] leading-[1.12] text-ink md:text-[52px]">
               {s.heroTitle}
             </h1>
-            <p className="mt-6 max-w-xl type-body">{s.description}</p>
+            <p className="mt-6 max-w-xl type-body">{s.answerFirst}</p>
             <div className="mt-8 flex flex-wrap items-center gap-6">
               <PillLink to="/book" search={{ service: s.id }}>
                 Book a Call

@@ -44,9 +44,19 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function syncWorkerEnvToProcess(env: unknown): void {
+  if (!env || typeof env !== "object" || typeof process === "undefined" || !process.env) return;
+  for (const [key, value] of Object.entries(env as Record<string, unknown>)) {
+    if (typeof value === "string" && value.length > 0 && !process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      syncWorkerEnvToProcess(env);
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

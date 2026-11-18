@@ -24,7 +24,14 @@ export const reportPayment = createServerFn({ method: "POST" })
     if (inv.status === "paid" || inv.status === "draft")
       return { ok: false, error: "This invoice cannot be updated." };
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { hasSupabaseAdminConfig, supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
+    if (!hasSupabaseAdminConfig()) {
+      return {
+        ok: false,
+        error: `Payment reporting is temporarily unavailable. Please email ${site.email} with your invoice reference.`,
+      };
+    }
     const { error: payErr } = await supabaseAdmin.from("payments").insert({
       invoice_id: inv.id,
       method: data.method,

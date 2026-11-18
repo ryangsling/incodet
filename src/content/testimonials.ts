@@ -17,14 +17,14 @@ export const testimonials: Testimonial[] = [
     id: "clinic",
     stat: "100% attendance rate",
     quote:
-      "Adding automated reminders and deposit booking didn't just eliminate no-shows — it changed the tone of our consultations and gave our clients a frictionless experience from day one.",
+      "Adding automated reminders and deposit booking didn't just eliminate no-shows, it changed the tone of our consultations and gave our clients a frictionless experience from day one.",
     name: "Dr. Claire Evans",
     role: "Clinical Director",
     business: "Rose City Wellness & Chiropractic",
     city: "Brighton",
     badge: "Rose City Clinic",
     rating: 5,
-    image: "/images/testimonials/clinic.jpg",
+    image: "/images/testimonials/clinic.webp",
     alt: "Dr. Claire Evans in her bright consultation clinic",
   },
   {
@@ -38,7 +38,7 @@ export const testimonials: Testimonial[] = [
     city: "London",
     badge: "Bloom Studio",
     rating: 5,
-    image: "/images/testimonials/salon.jpg",
+    image: "/images/testimonials/salon.webp",
     alt: "Elena Rostova smiling warmly in her modern salon studio",
   },
   {
@@ -52,7 +52,7 @@ export const testimonials: Testimonial[] = [
     city: "Toronto",
     badge: "Vance Roofing",
     rating: 5,
-    image: "/images/testimonials/contractor.jpg",
+    image: "/images/testimonials/contractor.webp",
     alt: "Marcus Vance on a residential roofing project site",
   },
   {
@@ -66,7 +66,7 @@ export const testimonials: Testimonial[] = [
     city: "Surrey & London",
     badge: "Barkers Executive",
     rating: 5,
-    image: "/images/testimonials/chauffeur.jpg",
+    image: "/images/testimonials/chauffeur.webp",
     alt: "Julian Hayes standing by an executive transport vehicle",
   },
 ];

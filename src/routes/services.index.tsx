@@ -1,28 +1,39 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/content/services";
-import { seoHead } from "@/lib/seo";
+import { breadcrumbLd, seoHead } from "@/lib/seo";
 import { PageHero } from "@/components/site/PageHero";
 import { Section } from "@/components/site/primitives";
 import { ServiceImage, ServicePlaceholder } from "@/components/site/ServicePanels";
 import { TempImage } from "@/components/site/TempImage";
 import { cn } from "@/lib/utils";
+
 export const Route = createFileRoute("/services/")({
   staticData: { sitemap: true },
   head: () =>
     seoHead(
-      "Services | Incodet",
-      "Websites, AI agents, apps, product design, custom software, automation and social media growth for your business.",
+      "Services | Websites, CRM & 24/7 AI Voice Agents | Incodet",
+      "Custom booking websites with built-in CRM, 24/7 AI voice calling agents (+44 UK, +1 US/CA, +61 AU), apps, automation, and custom software.",
       "/services",
+      {
+        scripts: [
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/services" },
+          ]),
+        ],
+      },
     ),
   component: ServicesIndex,
 });
+
 function ServicesIndex() {
   return (
     <>
       <PageHero title="Our services">
-        Websites, AI agents, apps, product design, custom software, automation and social media
-        growth for your business.
+        Incodet helps local service businesses across the UK, US, Canada, and Australia turn missed
+        calls and outdated sites into booked revenue through custom websites with built-in CRM and
+        24/7 AI voice calling agents connected to +44, +1, and +61 lines.
       </PageHero>
       <Section>
         <div className="grid gap-6 md:grid-cols-2">

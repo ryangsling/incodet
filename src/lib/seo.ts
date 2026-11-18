@@ -1,12 +1,26 @@
 import { site } from "@/config/site";
 import type { FaqItem } from "@/content/faq";
 
-// PNG is the share image: page head tags keep one og:image, and some platforms skip WebP previews.
 export const ogImage = {
   webp: `${site.siteUrl}/og/incodet-og.webp`,
   png: `${site.siteUrl}/og/incodet-og.png`,
-  alt: "Incodet: Websites, AI Agents & Software That Grow With Your Business",
+  alt: "Incodet: High-Converting Websites, Built-In CRM & 24/7 AI Voice Calling Agents",
 };
+
+export const TARGET_COUNTRIES = [
+  { "@type": "Country", name: "United Kingdom" },
+  { "@type": "Country", name: "United States" },
+  { "@type": "Country", name: "Canada" },
+  { "@type": "Country", name: "Australia" },
+] as const;
+
+export const KNOWS_ABOUT = [
+  "24/7 AI Voice Calling Agents",
+  "AI Phone Receptionist",
+  "Local Business Web Development",
+  "Custom CRM & Online Booking Systems",
+  "Business Process Automation",
+] as const;
 
 type Script = { type: string; children: string };
 
@@ -20,27 +34,28 @@ export function seoHead(
   title: string,
   description: string,
   path: string,
-  opts: { type?: string; scripts?: Script[] } = {},
+  opts: { type?: string; scripts?: Script[]; noindex?: boolean } = {},
 ) {
   const url = `${site.siteUrl}${path === "/" ? "" : path}` || site.siteUrl;
   return {
     meta: [
       { title },
       { name: "description", content: description },
+      ...(opts.noindex ? [{ name: "robots", content: "noindex, nofollow" }] : []),
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: opts.type ?? "website" },
       { property: "og:url", content: url },
       { property: "og:site_name", content: site.name },
-      { property: "og:image", content: ogImage.png },
-      { property: "og:image:type", content: "image/png" },
+      { property: "og:image", content: ogImage.webp },
+      { property: "og:image:type", content: "image/webp" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: ogImage.alt },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
-      { name: "twitter:image", content: ogImage.png },
+      { name: "twitter:image", content: ogImage.webp },
     ],
     links: [{ rel: "canonical", href: url }],
     scripts: opts.scripts ?? [],
@@ -66,9 +81,69 @@ export const breadcrumbLd = (items: { name: string; path: string }[]) =>
       "@type": "ListItem",
       position: i + 1,
       name: it.name,
-      item: `${site.siteUrl}${it.path}`,
+      item: `${site.siteUrl}${it.path === "/" ? "" : it.path}` || site.siteUrl,
     })),
   });
+
+export const websiteLd = () =>
+  jsonLd({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${site.siteUrl}/#website`,
+    name: site.name,
+    url: site.siteUrl,
+    publisher: { "@id": `${site.siteUrl}/#organization` },
+  });
+
+export const serviceLd = (service: { title: string; description: string; to: string }) =>
+  jsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    description: service.description,
+    url: `${site.siteUrl}${service.to}`,
+    provider: { "@id": `${site.siteUrl}/#organization` },
+    areaServed: TARGET_COUNTRIES,
+    knowsAbout: KNOWS_ABOUT,
+  });
+
+export const articleLd = (study: {
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  challenge: string;
+  solution: string;
+  highlights: string[];
+  outcomes?: string[];
+  period?: string;
+  image: { src: string };
+}) => {
+  const url = `${site.siteUrl}/case-studies/${study.slug}`;
+  const summaryParts = [
+    `Problem: ${study.challenge}`,
+    `Solution: ${study.solution}`,
+    ...(study.outcomes?.length ? [`Results: ${study.outcomes.join("; ")}.`] : []),
+  ];
+  return jsonLd({
+    "@context": "https://schema.org",
+    "@type": ["Article", "CreativeWork"],
+    "@id": `${url}#article`,
+    headline: `${study.name} — ${study.category}`,
+    name: study.name,
+    description: study.description,
+    articleBody: summaryParts.join(" "),
+    about: study.category,
+    keywords: [study.category, ...study.highlights, ...(study.outcomes ?? [])].join(", "),
+    image: study.image.src.startsWith("http")
+      ? study.image.src
+      : `${site.siteUrl}${study.image.src}`,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    author: { "@id": `${site.siteUrl}/#organization` },
+    publisher: { "@id": `${site.siteUrl}/#organization` },
+  });
+};
 
 export function organizationLd() {
   const sameAs = Object.values(site.socials).filter(Boolean);
@@ -80,21 +155,14 @@ export function organizationLd() {
     postalCode: "6025",
     addressCountry: "AU",
   };
-  const areaServed = [
-    "Australia",
-    "United Kingdom",
-    "Canada",
-    "United States",
-    "Europe",
-    "Bangladesh",
-  ].map((name) => ({ "@type": "Place", name }));
   const base = {
     name: site.name,
     url: site.siteUrl,
     email: site.email,
     telephone: "+61451526342",
     address,
-    areaServed,
+    areaServed: TARGET_COUNTRIES,
+    knowsAbout: KNOWS_ABOUT,
     ...(sameAs.length ? { sameAs } : {}),
   };
   return [
@@ -109,7 +177,7 @@ export function organizationLd() {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "@id": `${site.siteUrl}/#localbusiness`,
-      image: ogImage.png,
+      image: ogImage.webp,
       ...base,
     }),
   ];

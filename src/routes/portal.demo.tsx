@@ -4,26 +4,25 @@ import { Info } from "lucide-react";
 import { toast } from "sonner";
 import { getDemoPortal } from "@/content/demoPortal";
 import { PortalDashboard } from "@/components/portal/PortalDashboard";
+import { breadcrumbLd, seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/portal/demo")({
-  staticData: { sitemap: false },
-  head: () => ({
-    meta: [
-      { title: "Portal Demo | Incodet" },
+  staticData: { sitemap: true },
+  head: () =>
+    seoHead(
+      "Client Portal Demo | Incodet",
+      "Explore an interactive live demo of the Incodet client portal: project milestones, deliverables, CRM workflow visibility, and invoices.",
+      "/portal/demo",
       {
-        name: "description",
-        content: "Explore a sample project in the Incodet client portal. Example data only.",
+        scripts: [
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Client Portal", path: "/portal" },
+            { name: "Portal Demo", path: "/portal/demo" },
+          ]),
+        ],
       },
-      { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Portal Demo | Incodet" },
-      {
-        property: "og:description",
-        content: "Explore a sample project in the Incodet client portal.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+    ),
   component: PortalDemo,
 });
 

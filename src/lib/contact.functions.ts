@@ -19,7 +19,14 @@ export const submitContact = createServerFn({ method: "POST" })
     if (Date.now() - d.rendered_at < MIN_FILL_MS) return { ok: true };
 
     try {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { hasSupabaseAdminConfig, supabaseAdmin } =
+        await import("@/integrations/supabase/client.server");
+      if (!hasSupabaseAdminConfig()) {
+        return {
+          ok: false,
+          error: `Contact form submission is temporarily unavailable. Please message us on WhatsApp or email ${site.email}.`,
+        };
+      }
       const { consumeFormAllowance } = await import("./form-spam.server");
       if (!(await consumeFormAllowance())) {
         return {

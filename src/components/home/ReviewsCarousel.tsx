@@ -62,15 +62,18 @@ export function ReviewsCarousel({
 
   // Touch swipe support
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
+    const touch = e.targetTouches[0];
+    if (!touch) return;
+    setTouchStart(touch.clientX);
     setTouchDelta(0);
     setIsPaused(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (touchStart === null) return;
-    const current = e.targetTouches[0].clientX;
-    setTouchDelta(current - touchStart);
+    const touch = e.targetTouches[0];
+    if (!touch) return;
+    setTouchDelta(touch.clientX - touchStart);
   };
 
   const handleTouchEnd = () => {
@@ -86,9 +89,10 @@ export function ReviewsCarousel({
     setIsPaused(false);
   };
 
-  const active = items[activeIndex];
-  const prevItem = items[prevIndex];
-  const nextItem = items[nextIndex];
+  const active = items[activeIndex] ?? items[0];
+  const prevItem = items[prevIndex] ?? active;
+  const nextItem = items[nextIndex] ?? active;
+  if (!active || !prevItem || !nextItem) return null;
 
   return (
     <div
@@ -108,7 +112,7 @@ export function ReviewsCarousel({
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center -z-10 overflow-hidden"
       >
-        <div className="h-[360px] w-[700px] rounded-full bg-gradient-to-r from-accent-from/15 via-panel-violet/20 to-panel-blue/15 blur-3xl opacity-75 motion-reduce:hidden" />
+        <div className="h-[360px] w-[700px] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--accent-from)_14%,transparent),color-mix(in_oklab,var(--panel-violet)_14%,transparent)_45%,transparent)] opacity-80 motion-reduce:hidden" />
       </div>
 
       {/* Main Showcase Stage */}
@@ -144,7 +148,7 @@ export function ReviewsCarousel({
             <span className="whitespace-nowrap text-[12px] font-semibold tracking-wider text-white uppercase [writing-mode:vertical-rl] rotate-180 drop-shadow-sm">
               {prevItem.badge}
             </span>
-            <div className="flex size-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white transition-transform duration-300 group-hover/flank:-translate-x-1">
+            <div className="flex size-7 items-center justify-center rounded-full bg-white/25 text-white transition-transform duration-300 group-hover/flank:-translate-x-1">
               <ArrowLeft aria-hidden className="size-3.5" />
             </div>
           </div>
@@ -214,7 +218,7 @@ export function ReviewsCarousel({
             <img
               src={active.image}
               alt={active.alt}
-              loading="eager"
+              loading="lazy"
               decoding="async"
               className="pointer-events-none absolute inset-0 size-full object-cover transition-transform duration-700 ease-out"
             />
@@ -226,7 +230,7 @@ export function ReviewsCarousel({
 
             {/* Client Company / Brand Pill Overlay (matches the video design) */}
             <div className="absolute bottom-5 right-5 lg:bottom-6 lg:right-6 z-10">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/55 backdrop-blur-md px-3.5 py-1.5 text-xs font-semibold tracking-wide text-white shadow-md">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/75 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-white shadow-md">
                 <span className="size-1.5 rounded-full bg-emerald-400" />
                 {active.badge}
               </span>
@@ -260,7 +264,7 @@ export function ReviewsCarousel({
             <span className="whitespace-nowrap text-[12px] font-semibold tracking-wider text-white uppercase [writing-mode:vertical-rl] rotate-180 drop-shadow-sm">
               {nextItem.badge}
             </span>
-            <div className="flex size-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white transition-transform duration-300 group-hover/flank:translate-x-1">
+            <div className="flex size-7 items-center justify-center rounded-full bg-white/25 text-white transition-transform duration-300 group-hover/flank:translate-x-1">
               <ArrowRight aria-hidden className="size-3.5" />
             </div>
           </div>

@@ -205,7 +205,10 @@ export function FloatingProjects() {
         ScrollTrigger.sort();
         ScrollTrigger.refresh();
       });
-      revert = () => mm.revert();
+      revert = () => {
+        mm.revert();
+        ScrollTrigger.getById("floating-burst")?.kill();
+      };
     });
     return () => {
       cancelled = true;
@@ -415,6 +418,8 @@ export function WorkCarousel() {
 
   const cursorTarget = useRef({ x: 0, y: 0 });
   const cursorPos = useRef({ x: 0, y: 0 });
+  const cursorRafRef = useRef(0);
+  const startCursorLoopRef = useRef<() => void>(() => {});
 
   /** Shortest signed distance from the wheel position to card i, so the wheel loops both ways. */
   const offset = useCallback(
@@ -590,6 +595,7 @@ export function WorkCarousel() {
 
   const onPointerMove = (e: RPointerEvent<HTMLDivElement>) => {
     cursorTarget.current = { x: e.clientX, y: e.clientY };
+    startCursorLoopRef.current();
     const hit = document.elementFromPoint(e.clientX, e.clientY);
     setOverButton(Boolean(hit?.closest('[data-status="active"] a, button')));
     const d = dragRef.current;
@@ -612,6 +618,7 @@ export function WorkCarousel() {
     dragRef.current = null;
     isDraggingRef.current = false;
     setDragging(false);
+    startCursorLoopRef.current();
     if (!d) return;
 
     if (!d.moved) {
@@ -651,26 +658,59 @@ export function WorkCarousel() {
     return () => el.removeEventListener("wheel", onWheel);
   }, [animateTo, dragDistancePerCard, startLoop]);
 
-  // Floating DRAG circle cursor follows the pointer smoothly with damped spring lerp.
+  // Floating DRAG circle cursor follows the pointer smoothly with damped spring lerp and idles at rest.
   useEffect(() => {
-    if (!cursorOn || !finePointer) return;
-    let raf = 0;
+    if (!cursorOn || !finePointer) {
+      if (cursorRafRef.current) {
+        cancelAnimationFrame(cursorRafRef.current);
+        cursorRafRef.current = 0;
+      }
+      return;
+    }
+
     let lastT = performance.now();
     const loop = (now: number) => {
       const dt = Math.min(0.05, Math.max(0.001, (now - lastT) / 1000));
       lastT = now;
       const c = cursorPos.current;
       const t = cursorTarget.current;
-      const k = reduced ? 1 : 1 - Math.exp(-18 * dt);
-      c.x += (t.x - c.x) * k;
-      c.y += (t.y - c.y) * k;
+      const dx = t.x - c.x;
+      const dy = t.y - c.y;
+
+      if ((Math.abs(dx) < 0.35 && Math.abs(dy) < 0.35 && !isDraggingRef.current) || reduced) {
+        c.x = t.x;
+        c.y = t.y;
+        if (cursor.current) {
+          cursor.current.style.transform = `translate3d(${c.x.toFixed(1)}px, ${c.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${isDraggingRef.current ? 0.88 : 1})`;
+        }
+        cursorRafRef.current = 0;
+        return;
+      }
+
+      const k = 1 - Math.exp(-18 * dt);
+      c.x += dx * k;
+      c.y += dy * k;
       if (cursor.current) {
         cursor.current.style.transform = `translate3d(${c.x.toFixed(1)}px, ${c.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${isDraggingRef.current ? 0.88 : 1})`;
       }
-      raf = requestAnimationFrame(loop);
+      cursorRafRef.current = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+
+    const startCursorLoop = () => {
+      if (cursorRafRef.current) return;
+      lastT = performance.now();
+      cursorRafRef.current = requestAnimationFrame(loop);
+    };
+    startCursorLoopRef.current = startCursorLoop;
+    startCursorLoop();
+
+    return () => {
+      startCursorLoopRef.current = () => {};
+      if (cursorRafRef.current) {
+        cancelAnimationFrame(cursorRafRef.current);
+        cursorRafRef.current = 0;
+      }
+    };
   }, [cursorOn, finePointer, reduced]);
 
   const go = (d: number) => animateTo(Math.round(targetPosRef.current) + d);
@@ -1056,6 +1096,7 @@ export function CallingAgent() {
   useEffect(() => {
     if (!pinned) return;
     let raf = 0;
+    let inView = true;
     const update = () => {
       raf = 0;
       const o = outer.current;
@@ -1068,12 +1109,29 @@ export function CallingAgent() {
       t.style.transform = `translate3d(${window.innerWidth - p * dist}px, 0, 0)`;
     };
     const on = () => {
-      if (!raf) raf = requestAnimationFrame(update);
+      if (!inView || raf) return;
+      raf = requestAnimationFrame(update);
     };
+    const o = outer.current;
+    const observer =
+      o && typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([entry]) => {
+              inView = Boolean(entry?.isIntersecting);
+              if (inView && !raf) raf = requestAnimationFrame(update);
+            },
+            { rootMargin: "160px 0px" },
+          )
+        : null;
+    if (o && observer) observer.observe(o);
+
     update();
+    window.addEventListener("incodet:lenis-scroll", on);
     window.addEventListener("scroll", on, { passive: true });
     window.addEventListener("resize", on);
     return () => {
+      observer?.disconnect();
+      window.removeEventListener("incodet:lenis-scroll", on);
       window.removeEventListener("scroll", on);
       window.removeEventListener("resize", on);
       if (raf) cancelAnimationFrame(raf);

@@ -1,0 +1,10 @@
+node_modules/
+.output/
+.wrangler/
+.tanstack/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store

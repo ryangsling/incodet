@@ -70,6 +70,7 @@ export function CaseStudyImage({
       src={c.image.src}
       alt={c.image.alt}
       loading={eager ? "eager" : "lazy"}
+      decoding="async"
       width={1440}
       height={900}
       className={cn("aspect-[16/10] w-full rounded-card-sm object-cover object-top", className)}
@@ -130,6 +131,15 @@ export function CaseStudyWideCard({ c }: { c: CaseStudy }) {
         <h3 className="mt-3 type-h3">{c.title ?? c.name}</h3>
         {c.title && <p className="mt-1 font-medium text-ink">{c.name}</p>}
         <p className="mt-4 type-body">{c.description}</p>
+        {c.outcomes && c.outcomes.length > 0 && (
+          <ul className="mt-4 flex flex-col gap-1.5" aria-label="Measurable results">
+            {c.outcomes.slice(0, 2).map((outcome) => (
+              <li key={outcome} className="type-small text-ink">
+                • {outcome}
+              </li>
+            ))}
+          </ul>
+        )}
         {c.tags && c.tags.length > 0 && (
           <ul className="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
             {c.tags.map((t) => (

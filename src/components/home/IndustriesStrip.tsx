@@ -18,29 +18,26 @@ export function IndustriesStrip() {
   };
 
   const handleCardKeyDown = (e: React.KeyboardEvent, index: number, card: IndustryCardItem) => {
+    const focusCardAt = (targetIndex: number) => {
+      const target = industryCards[targetIndex];
+      if (!target) return;
+      cardRefs.current[targetIndex]?.focus();
+      setActiveId(target.id);
+      setMobileOpenId(target.id);
+    };
+
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
-      const nextIndex = (index + 1) % industryCards.length;
-      cardRefs.current[nextIndex]?.focus();
-      setActiveId(industryCards[nextIndex].id);
-      setMobileOpenId(industryCards[nextIndex].id);
+      focusCardAt((index + 1) % industryCards.length);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
-      const prevIndex = (index - 1 + industryCards.length) % industryCards.length;
-      cardRefs.current[prevIndex]?.focus();
-      setActiveId(industryCards[prevIndex].id);
-      setMobileOpenId(industryCards[prevIndex].id);
+      focusCardAt((index - 1 + industryCards.length) % industryCards.length);
     } else if (e.key === "Home") {
       e.preventDefault();
-      cardRefs.current[0]?.focus();
-      setActiveId(industryCards[0].id);
-      setMobileOpenId(industryCards[0].id);
+      focusCardAt(0);
     } else if (e.key === "End") {
       e.preventDefault();
-      const lastIndex = industryCards.length - 1;
-      cardRefs.current[lastIndex]?.focus();
-      setActiveId(industryCards[lastIndex].id);
-      setMobileOpenId(industryCards[lastIndex].id);
+      focusCardAt(industryCards.length - 1);
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       if (card.isCustomAction) {
@@ -65,9 +62,9 @@ export function IndustriesStrip() {
           <h2 id="industries-title" className="type-h2 mt-2 font-medium tracking-tight text-ink">
             Built for businesses <Accent>like yours</Accent>
           </h2>
-          <p className="type-body mx-auto mt-3 max-w-[560px] text-muted-foreground">
-            We set up booking websites, AI chatbots and 24/7 call answering for local service
-            businesses. Pick your industry to see how it works.
+          <p className="type-body mx-auto mt-3 max-w-[600px] text-muted-foreground">
+            High-converting booking websites with built-in CRM and 24/7 AI voice calling agents
+            (+44, +1, +61) for local service teams across the UK, US, Canada, and Australia.
           </p>
         </div>
 

@@ -19,32 +19,48 @@ export function FloatingNav() {
 
   useEffect(() => {
     let raf = 0;
+    let darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-theme="dark"]'));
+    const refreshCache = () => {
+      darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-theme="dark"]'));
+    };
+
     const update = () => {
       raf = 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setPct(max > 0 ? Math.round((window.scrollY / max) * 100) : 0);
+      setPct(max > 0 ? Math.min(100, Math.max(0, Math.round((window.scrollY / max) * 100))) : 0);
       const nav = navRef.current;
       if (!nav) return;
       const r = nav.getBoundingClientRect();
       const y = r.top + r.height / 2;
-      const dark = Array.from(document.querySelectorAll<HTMLElement>('[data-theme="dark"]')).some(
-        (el) => {
-          if (nav.contains(el)) return false;
-          const b = el.getBoundingClientRect();
-          return b.top <= y && b.bottom >= y;
-        },
-      );
+      const dark = darkSections.some((el) => {
+        if (!el.isConnected || nav.contains(el)) return false;
+        const b = el.getBoundingClientRect();
+        return b.top <= y && b.bottom >= y;
+      });
       setInverted(dark);
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
+    const onResize = () => {
+      refreshCache();
+      on();
+    };
     update();
+    // Refresh dark section cache slightly after route transition settles
+    const cacheTimer = window.setTimeout(() => {
+      refreshCache();
+      update();
+    }, 120);
+    window.addEventListener("incodet:lenis-scroll", on);
     window.addEventListener("scroll", on, { passive: true });
-    window.addEventListener("resize", on);
+    window.addEventListener("resize", onResize);
     return () => {
+      window.clearTimeout(cacheTimer);
+      window.removeEventListener("incodet:lenis-scroll", on);
       window.removeEventListener("scroll", on);
-      window.removeEventListener("resize", on);
+      window.removeEventListener("resize", onResize);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [pathname]);
 

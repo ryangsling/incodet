@@ -1,4 +1,4 @@
-import { faqLd, organizationLd, seoHead } from "@/lib/seo";
+import { faqLd, organizationLd, seoHead, websiteLd } from "@/lib/seo";
 import { faq } from "@/content/faq";
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
@@ -21,13 +21,16 @@ import {
 import { ScrollProcess } from "@/components/home/ScrollProcess";
 import { BookingSection } from "@/components/site/BookingSection";
 
-const title = "Incodet | Websites, AI Agents & Custom Software";
+const title = "Incodet | Custom Booking Websites, CRM & 24/7 AI Voice Agents";
 const description =
-  "Booking websites, 24/7 AI chatbots and calling agents, and custom software for small, growing and established businesses. Pay only for what you use.";
+  "Helping local service businesses in the UK, USA, Canada, and Australia turn missed calls into revenue with high-converting CRM booking websites and 24/7 AI voice calling agents (+44, +1, +61).";
 
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
-  head: () => seoHead(title, description, "/", { scripts: [...organizationLd(), faqLd(faq)] }),
+  head: () =>
+    seoHead(title, description, "/", {
+      scripts: [...organizationLd(), websiteLd(), faqLd(faq)],
+    }),
   component: Index,
 });
 

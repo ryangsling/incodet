@@ -42,7 +42,10 @@ export function FeaturedStudies() {
         ScrollTrigger.sort();
         ScrollTrigger.refresh();
       });
-      revert = () => mm.revert();
+      revert = () => {
+        mm.revert();
+        featuredCaseStudies.forEach((_, i) => ScrollTrigger.getById(`featured-${i}`)?.kill());
+      };
     });
     return () => {
       cancelled = true;

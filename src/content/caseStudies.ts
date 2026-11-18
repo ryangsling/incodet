@@ -21,6 +21,7 @@ export type CaseStudy = {
   challenge: string;
   solution: string;
   highlights: string[];
+  outcomes?: string[];
   tags?: string[];
   /** Omit for internal tools that must never be linked. */
   liveUrl?: string;
@@ -87,6 +88,11 @@ const all: CaseStudy[] = [
       "Online booking on every page",
       "Airport, corporate and event hire pages",
       "Wheelchair accessible vehicles shown up front",
+    ],
+    outcomes: [
+      "24/7 mobile online booking available across all Brighton & Hove fleet routes",
+      "Direct online journey capture reducing repetitive fare-check calls",
+      "Unified multi-service structure across airport, event, and accessible transfers",
     ],
     tint: "bg-tint-western",
   }),
@@ -162,6 +168,11 @@ const all: CaseStudy[] = [
       "One article a day across all locations",
       "Read-only content API for each site",
       "RSS feed per location",
+    ],
+    outcomes: [
+      "Automates 1 quality-checked local SEO article daily across multiple UK town sites",
+      "Eliminates manual multi-site publishing bottlenecks via read-only API distribution",
+      "Centralized editorial control paired with localized RSS syndication",
     ],
     imageAlt: "Homepage of the Western Cars Content Hub platform",
   }),
@@ -295,6 +306,11 @@ const all: CaseStudy[] = [
       "Transparent upfront pricing across all treatments",
       "Ask Ava AI chat assistant & 1-minute booking flow",
     ],
+    outcomes: [
+      "Under-60-second online patient booking flow paired with clinician availability",
+      "Upfront fee clarity designed to reduce pre-booking price enquiry calls",
+      "24/7 Ask Ava assistant handling out-of-hours patient questions and triage links",
+    ],
     tags: ["Next.js", "Online Booking", "AI Chat"],
   }),
   make({
@@ -318,6 +334,11 @@ const all: CaseStudy[] = [
       "24/7 AI receptionist for storm & after-hours calls",
       "Interactive cost guide, financing preview & booking",
     ],
+    outcomes: [
+      "Captures storm and replacement leads in 60 seconds via address-first estimate flow",
+      "Zero missed inspection calls during peak weather surges with 24/7 AI voice reception",
+      "Pre-qualifies repair scope and financing before crews visit the property",
+    ],
     tags: ["Next.js", "24/7 AI Receptionist", "Lead Capture"],
   }),
   make({
@@ -339,6 +360,10 @@ const all: CaseStudy[] = [
       "Dataset request flow",
       "Vendor partner application",
     ],
+    outcomes: [
+      "Dual-funnel intake routing robotics buyers and data suppliers cleanly",
+      "Structured dataset licensing requests replacing unstructured back-and-forth emails",
+    ],
   }),
   make({
     slug: "bloom-studio",
@@ -355,6 +380,10 @@ const all: CaseStudy[] = [
     solution:
       "A sample salon website showing how an AI concierge answers questions and handles bookings.",
     highlights: ["AI concierge demo", "Online booking flow", "Salon service pages"],
+    outcomes: [
+      "Enables 24/7 treatment booking even when stylists are busy in the chair",
+      "AI concierge resolves pricing and availability queries automatically after hours",
+    ],
   }),
   make({
     slug: "barkers-executive",
@@ -371,6 +400,10 @@ const all: CaseStudy[] = [
     solution:
       "A dark, premium site with a rolling information bar, corporate travel pages, areas covered and quick booking.",
     highlights: ["Premium dark design", "Corporate travel pages", "Quick booking"],
+    outcomes: [
+      "Positioned executive fleet for higher-value corporate and Gatwick transfer bookings",
+      "Streamlined online quote capture across Sussex and London commuter corridors",
+    ],
   }),
   make({
     slug: "brhex-studio",
@@ -394,6 +427,10 @@ const all: CaseStudy[] = [
       "360° WebGL tour viewer with hotspots",
       "SVG floor plan engine with a one-click toggle",
       "Lead capture and custom branding",
+    ],
+    outcomes: [
+      "Consolidated two disconnected real-estate media vendors into one white-label platform",
+      "Built-in lead capture synced across interactive 360° tours and SVG floorplans",
     ],
     liveUrl: "https://virtual-tour-poc.vercel.app/tour/50ad98c9",
     liveLabel: "View Live Demo",

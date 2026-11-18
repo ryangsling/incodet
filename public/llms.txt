@@ -1,0 +1,66 @@
+# Incodet
+
+> Incodet helps local service businesses across the United Kingdom, United States, Canada, and Australia stop losing revenue from missed calls and outdated websites by delivering high-converting custom websites with built-in CRM and online booking paired with 24/7 AI Voice Calling Agents connected directly to local phone numbers (+44 UK, +1 US/Canada, +61 Australia) with timezone-aware scheduling.
+
+## Core Offer & Regions
+
+- Target Regions: United Kingdom (+44), United States (+1), Canada (+1), Australia (+61)
+- Delivery Team: Offices and engineering specialists in Perth (Australia), Leeds & Birmingham (UK), Montreal (Canada), and Dhaka & Sylhet (Bangladesh)
+- Primary Deliverables:
+  1. Custom Booking Websites with built-in CRM, client portal, and live calendar synchronization (launch in 1 to 2 weeks).
+  2. 24/7 AI Voice Calling Agents embedded directly on the website AND connected to local business numbers (+44, +1, +61) for instant call answering, qualification, and timezone-aware appointment booking.
+  3. 24/7 AI Website Chatbots trained on services, pricing, policies, and real-time slot availability.
+  4. Custom SaaS Platforms, Mobile Apps, UI/UX Product Design, Business Automation, and Social Media Growth.
+- Compliance Readiness: Configured to support UK GDPR, US TCPA, Canadian PIPEDA, and Australian Privacy Principles (APPs) workflows.
+
+## Pricing Summary (USD, No Lock-In Contracts)
+
+- Starter Plan: From $499 one-time setup, optional $19/month care (1 to 2 weeks launch) — custom mobile-first website with online booking, built-in CRM basics, and email confirmations.
+- Growth Plan (Recommended): From $999 one-time setup, from $149/month (2 to 3 weeks launch) — includes 24/7 AI calling agent (300 minutes/month included, $0.20/extra minute only if used), embedded AI website chatbot, built-in CRM, calendar sync, and instant owner alerts via email and WhatsApp.
+- Scale Plan: From $3,499 one-time setup, from $299/month (4 to 8 weeks launch) — multi-page SaaS-level platforms, custom software, bespoke integrations, client portals, and end-to-end automation.
+
+## Core Pages
+
+- [Home](https://www.incodet.com/): Overview of custom booking websites, 24/7 AI voice calling agents, live launches, and client portal.
+- [Pricing](https://www.incodet.com/pricing): Transparent Starter, Growth, and Scale plans with full feature comparison.
+- [Book a Free Call](https://www.incodet.com/book): Schedule a 30-minute timezone-aware discovery consultation.
+- [Client Portal Demo](https://www.incodet.com/portal/demo): Interactive live demo of the Incodet client portal, milestones, deliverables, and billing.
+- [Case Studies](https://www.incodet.com/case-studies): Full portfolio of shipped client websites, demos, and platforms.
+
+## Services
+
+- [All Services](https://www.incodet.com/services): Directory of Incodet web, AI voice, chat, and software services.
+- [Websites & Web Development](https://www.incodet.com/services/web-development): Custom booking websites with built-in CRM for UK, US, Canadian, and Australian service businesses.
+- [24/7 AI Calling Agent](https://www.incodet.com/services/ai-calling-agent): AI voice receptionist embedded on websites and connected to +44, +1, and +61 numbers with timezone-aware calendar booking.
+- [AI Website Chatbot](https://www.incodet.com/services/ai-chatbot): 24/7 conversational AI trained on business pricing, services, and live CRM booking.
+- [SaaS & Custom Software](https://www.incodet.com/custom-software): Bespoke CRMs, client portals, scheduling engines, and vertical SaaS platforms.
+- [Mobile App Development](https://www.incodet.com/services/app-development): Cross-platform iOS and Android apps with web admin panels and push alerts.
+- [UI/UX & Product Design](https://www.incodet.com/services/ui-ux-product-design): UX discovery, user flows, wireframes, interactive prototypes, and Figma design systems.
+- [Business Automation](https://www.incodet.com/services/business-automation): Automated reminders, follow-ups, CRM sync, and owner alerts.
+- [Social Media Growth](https://www.incodet.com/services/social-media-growth): Content planning, short-form video, and local paid campaigns.
+
+## Industries We Serve
+
+- [All Industries](https://www.incodet.com/industries): Websites and 24/7 AI voice receptionists by local service niche.
+- [Roofing Companies](https://www.incodet.com/industries/roofing): Capture storm and roof inspection leads with 24/7 AI call answering and instant address estimates.
+- [Epoxy Flooring](https://www.incodet.com/industries/epoxy-flooring): Qualify floor dimensions, concrete surface condition, and book quotes while crews are mid-pour.
+- [Salons](https://www.incodet.com/industries/salons): Fill the diary 24/7 with online booking and AI phone reception without interrupting chair time.
+- [Barber Shops](https://www.incodet.com/industries/barber-shops): Automated cut and skin fade bookings on the phone and web without putting clippers down.
+- [Restaurants](https://www.incodet.com/industries/restaurants): Table reservations, opening hours, and menu enquiries answered during dinner service.
+- [Hotels](https://www.incodet.com/industries/hotels): Direct room bookings and 24/7 front desk support reducing third-party OTA commissions.
+- [Car Rentals](https://www.incodet.com/industries/car-rentals): Instant vehicle availability, deposit policy answers, and after-hours reservation capture.
+- [Car Wash & Detailing](https://www.incodet.com/industries/car-wash): Valet and detailing slot scheduling synced straight into your bay calendar.
+- [Dental Clinics](https://www.incodet.com/industries/dental-clinics): Patient intake, transparent treatment fees, clinician slot booking, and 24/7 reception support.
+- [Medical Clinics](https://www.incodet.com/industries/medical-clinics): Queue-free patient appointment scheduling, rescheduling, and non-clinical reception assistance.
+- [Law & Accounting Firms](https://www.incodet.com/industries/professional-firms): Protect billable hours with automated client intake and qualified consultation scheduling.
+
+## Featured Case Studies & Demos
+
+- [Northpoint Dental](https://www.incodet.com/case-studies/northpoint-dental): Dental clinic booking site with transparent fees, clinician slots, and 24/7 AI assistant (Leeds, UK).
+- [Summit Ridge Roofing](https://www.incodet.com/case-studies/summit-ridge-roofing): Roofing lead engine with 1-minute property-address estimator and 24/7 AI receptionist (Dallas, US).
+- [Bloom Studio](https://www.incodet.com/case-studies/bloom-studio): UK salon booking website with integrated AI concierge for after-hours bookings.
+- [Western Cars Brighton](https://www.incodet.com/case-studies/western-cars-brighton): Multi-channel UK taxi and airport transfer booking website.
+- [Western Cars Content Hub](https://www.incodet.com/case-studies/western-cars-content-hub): Centralized AI publishing platform distributing daily local SEO articles via API.
+- [Barkers Executive Cars](https://www.incodet.com/case-studies/barkers-executive): Luxury executive travel and corporate Gatwick transfer booking site.
+- [HumanData Labs](https://www.incodet.com/case-studies/humandata-labs): Enterprise AI and robotics training data licensing portal.
+- [BRHEX Studio](https://www.incodet.com/case-studies/brhex-studio): White-label 360-degree WebGL property tour and SVG floorplan SaaS proof of concept.

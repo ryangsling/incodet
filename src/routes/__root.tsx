@@ -21,6 +21,7 @@ import { CookieConsent } from "@/components/site/CookieConsent";
 import { supabase } from "@/integrations/supabase/client";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { ChatWidget } from "@/components/site/ChatWidget";
+import { IntroPreloader } from "@/components/site/IntroPreloader";
 
 function NotFoundComponent() {
   return (
@@ -66,12 +67,12 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           >
             Try again
           </button>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -134,13 +135,13 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        <HeadContent />
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var _f=window.fetch;Object.defineProperty(window,'fetch',{configurable:true,enumerable:true,get:function(){return _f;},set:function(v){_f=v;}});}catch(e){}})();`,
           }}
         />
-        <HeadContent />
       </head>
       <body suppressHydrationWarning>
         {children}
@@ -169,6 +170,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {!isDeck && <IntroPreloader />}
       {!isDeck && <SmoothScroll />}
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <a

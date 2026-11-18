@@ -1,18 +1,8 @@
-import { faqLd } from "@/lib/seo";
-import { faqFor } from "@/content/faq";
-import { industryFaq } from "@/content/industries";
 import { createFileRoute } from "@tanstack/react-router";
-import { IndustryPage } from "@/components/site/IndustryPage";
-import { seoHead } from "@/components/site/PageHero";
-import { getIndustry } from "@/content/industries";
-
-const { page } = getIndustry("car-rentals");
+import { IndustryPage, industryHead } from "@/components/site/IndustryPage";
 
 export const Route = createFileRoute("/industries/car-rentals")({
   staticData: { sitemap: true },
-  head: () =>
-    seoHead(page.title, page.description, "/industries/car-rentals", {
-      scripts: [faqLd(faqFor(industryFaq))],
-    }),
+  head: () => industryHead("car-rentals"),
   component: () => <IndustryPage slug="car-rentals" />,
 });

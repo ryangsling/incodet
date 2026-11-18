@@ -89,7 +89,8 @@ export function BoomerangVideoBg({
       }
 
       const N = bitmaps.length;
-      if (N < 2 || !ctx) {
+      const firstFrame = bitmaps[0];
+      if (N < 2 || !firstFrame || !ctx) {
         // Fallback: loop video if capture failed
         video.currentTime = 0;
         video.play().catch(() => {});
@@ -97,8 +98,8 @@ export function BoomerangVideoBg({
       }
 
       // Configure canvas to match first frame dimensions
-      canvas.width = bitmaps[0].width;
-      canvas.height = bitmaps[0].height;
+      canvas.width = firstFrame.width;
+      canvas.height = firstFrame.height;
 
       setIsCanvasReady(true);
       video.pause();
@@ -163,7 +164,7 @@ export function BoomerangVideoBg({
         autoPlay
         muted
         playsInline
-        preload="auto"
+        preload={isActive ? "metadata" : "none"}
         className={cn(
           "size-full object-cover transition-opacity duration-300",
           isCanvasReady ? "opacity-0" : "opacity-100",

@@ -1,7 +1,50 @@
-User-agent: *
+User-agent: OAI-SearchBot
 Allow: /
-Disallow: /portal
+Allow: /portal/demo
 Disallow: /admin
+Disallow: /portal/dashboard
 Disallow: /styleguide
 
-Sitemap: https://incodet.com/sitemap.xml
+User-agent: ChatGPT-User
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+User-agent: Googlebot
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+User-agent: Bingbot
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+User-agent: *
+Allow: /
+Allow: /portal/demo
+Disallow: /admin
+Disallow: /portal/dashboard
+Disallow: /styleguide
+
+Sitemap: https://www.incodet.com/sitemap.xml

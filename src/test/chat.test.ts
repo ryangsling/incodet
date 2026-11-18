@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BOOK_CALL_TOKEN,
+  CHAT_FALLBACK_MODEL,
   CHAT_MODEL,
   CHAT_QUICK_REPLIES,
   INITIAL_CHAT_MESSAGE,
@@ -14,11 +15,12 @@ import { INCODET_SYSTEM_PROMPT, toGeminiContents } from "@/lib/chat.server";
 
 describe("Incodet chat widget configuration", () => {
   it("uses the configured model, initial greeting, quick replies and limits", () => {
-    expect(CHAT_MODEL).toBe("gemini-2.5-flash");
+    expect(CHAT_MODEL).toBe("gemini-4-hydrogen");
+    expect(CHAT_FALLBACK_MODEL).toBe("gemini-3.1-flash-lite");
     expect(MAX_SESSION_MESSAGES).toBe(20);
     expect(MAX_IP_MESSAGES_PER_HOUR).toBe(60);
     expect(INITIAL_CHAT_MESSAGE).toBe(
-      "Hi! Ask me anything about Incodet: what we build, pricing, or how we work.",
+      "Hi, I'm Mary! Ask me anything about Incodet: what we build, pricing, or how we work.",
     );
     expect(CHAT_QUICK_REPLIES).toEqual([
       "What do you build?",
@@ -80,6 +82,7 @@ describe("Incodet chat widget configuration", () => {
     expect(INCODET_SYSTEM_PROMPT).not.toContain("\u2014");
     expect(INCODET_SYSTEM_PROMPT).not.toContain("[names/roles");
     expect(INCODET_SYSTEM_PROMPT).not.toContain("[link]");
+    expect(INCODET_SYSTEM_PROMPT).toContain("Mary");
     expect(INCODET_SYSTEM_PROMPT).toContain("January 2026");
     expect(INCODET_SYSTEM_PROMPT).toContain("Asif Khan");
     expect(INCODET_SYSTEM_PROMPT).toContain("[BOOK_CALL]");

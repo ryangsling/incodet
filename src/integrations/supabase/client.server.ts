@@ -39,12 +39,20 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
+export function hasSupabaseAdminConfig(): boolean {
+  const url = process.env["SUPABASE_URL"]?.trim() ?? "";
+  const serviceRoleKey = process.env["SUPABASE_SERVICE_ROLE_KEY"]?.trim() ?? "";
+  if (!url || !serviceRoleKey) return false;
+  if (url.includes("placeholder-project") || serviceRoleKey.includes("placeholder")) return false;
+  return true;
+}
+
 function createSupabaseAdminClient() {
   const SUPABASE_URL = process.env["SUPABASE_URL"] || "https://placeholder-project.supabase.co";
   const SUPABASE_SERVICE_ROLE_KEY =
     process.env["SUPABASE_SERVICE_ROLE_KEY"] || "sb_secret_dummy_placeholder_key";
 
-  if (!process.env["SUPABASE_URL"] || !process.env["SUPABASE_SERVICE_ROLE_KEY"]) {
+  if (!hasSupabaseAdminConfig()) {
     console.warn(
       "[Supabase] Supabase admin credentials not configured. Using placeholder client for server.",
     );

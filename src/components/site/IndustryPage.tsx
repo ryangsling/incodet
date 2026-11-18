@@ -1,13 +1,28 @@
 import { Bell, CalendarCheck, Check, Phone, Bot, TriangleAlert, ArrowRight } from "lucide-react";
 import { getCaseStudy } from "@/content/caseStudies";
-import { faqFor } from "@/content/faq";
-import { getIndustry, industryFaq, industryWhatYouGet } from "@/content/industries";
+import { getIndustry, industryWhatYouGet } from "@/content/industries";
+import { breadcrumbLd, faqLd, seoHead } from "@/lib/seo";
 import { BookingCta } from "@/components/home/HomeSections";
 import { PillLink } from "./Button";
 import { CaseStudyWideCard } from "./CaseStudyCard";
 import { Accordion } from "./Interactive";
 import { PageHero } from "./PageHero";
 import { Card, Reveal, Section, SectionHeading } from "./primitives";
+
+export function industryHead(slug: string) {
+  const ind = getIndustry(slug);
+  const { page } = ind;
+  return seoHead(page.title, page.description, ind.to, {
+    scripts: [
+      faqLd(page.faq),
+      breadcrumbLd([
+        { name: "Home", path: "/" },
+        { name: "Industries", path: "/industries" },
+        { name: ind.name, path: ind.to },
+      ]),
+    ],
+  });
+}
 
 export function TranscriptCard({
   caller,
@@ -67,7 +82,7 @@ export function IndustryPage({ slug }: { slug: string }) {
   return (
     <>
       <PageHero
-        badge={ind.name}
+        badge={`${ind.name} · UK, USA, Canada & Australia`}
         title={p.h1}
         actions={
           <>
@@ -80,7 +95,7 @@ export function IndustryPage({ slug }: { slug: string }) {
           </>
         }
       >
-        {p.intro}
+        {p.answerFirst}
       </PageHero>
 
       <Section>
@@ -150,7 +165,7 @@ export function IndustryPage({ slug }: { slug: string }) {
       <Section theme="soft">
         <SectionHeading title="Questions, answered" />
         <Reveal className="mx-auto mt-12 max-w-3xl">
-          <Accordion items={faqFor(industryFaq)} />
+          <Accordion items={p.faq} />
         </Reveal>
       </Section>
 

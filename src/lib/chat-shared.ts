@@ -1,13 +1,14 @@
 import { z } from "zod";
 
-export const CHAT_MODEL = "gemini-2.5-flash";
+export const CHAT_MODEL = "gemini-4-hydrogen";
+export const CHAT_FALLBACK_MODEL = "gemini-3.1-flash-lite";
 export const MAX_SESSION_MESSAGES = 20;
 export const MAX_IP_MESSAGES_PER_HOUR = 60;
 export const HOUR_MS = 60 * 60 * 1000;
 export const BOOK_CALL_TOKEN = "[BOOK_CALL]";
 
 export const INITIAL_CHAT_MESSAGE =
-  "Hi! Ask me anything about Incodet: what we build, pricing, or how we work.";
+  "Hi, I'm Mary! Ask me anything about Incodet: what we build, pricing, or how we work.";
 
 export const CHAT_QUICK_REPLIES = [
   "What do you build?",

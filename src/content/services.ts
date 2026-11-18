@@ -1,5 +1,4 @@
 import type { FaqItem } from "./faq";
-import { faqFor } from "./faq";
 import type { TempImageId } from "./tempImages";
 
 export type Service = {
@@ -7,6 +6,8 @@ export type Service = {
   title: string;
   short: string;
   description: string;
+  /** Concise 40-60 word Answer-First paragraph placed directly under the H1 for AI extraction & clarity. */
+  answerFirst: string;
   color: string;
   to: string;
   heroTitle: string;
@@ -24,45 +25,59 @@ export type Service = {
    */
   temp?: { strip?: TempImageId[]; hero?: TempImageId; before?: TempImageId; after?: TempImageId };
 };
+
 const features = (rows: [string, string][]) => rows.map(([title, body]) => ({ title, body }));
 const questions = (rows: [string, string][]): FaqItem[] =>
   rows.map(([question, answer]) => ({ question, answer }));
+
 export const services: Service[] = [
   {
     id: "web-development",
     temp: { before: "webdev-bloom-before", after: "webdev-bloom-after" },
     title: "Websites & Web Development",
-    short: "Booking-ready websites built to convert",
+    short: "Custom websites with built-in CRM & online booking",
     description:
-      "Mobile-first websites built around instant online scheduling, transparent service breakdowns, and local search foundations from day one.",
+      "High-converting custom websites with built-in CRM, online booking, and embedded 24/7 AI voice and chat for local service businesses in the UK, US, Canada, and Australia.",
+    answerFirst:
+      "Incodet designs and builds high-converting custom websites with built-in CRM and live online booking for local service businesses across the UK, US, Canada, and Australia. Delivered in 1 to 2 weeks, every site replaces outdated pages with instant calendar scheduling, faster load speeds, and steady inbound job enquiries.",
     color: "bg-service-web",
     to: "/services/web-development",
-    heroTitle: "Websites & Web Development for Local Businesses",
+    heroTitle: "Custom Websites & Online Booking Built for Local Services",
     tags: [
-      "Website design",
+      "Custom design",
+      "Built-in CRM",
       "Online booking",
-      "Mobile-first",
       "Local SEO",
-      "Speed",
+      "Timezone-aware",
       "Hosting & care",
     ],
     features: features([
-      ["Custom design", "A site that looks like your brand, not a template."],
-      ["Online booking", "Customers book online without calling."],
-      ["Service and area pages", "Clear pages for every service and town you cover."],
-      ["Search basics", "Titles, structured data and speed set up from day one."],
-      ["Easy updates", "Change text and photos without a developer."],
-      ["Care plan", "Hosting, updates and fixes for $19 a month."],
+      ["Custom design", "A fast site tailored to your brand, never a generic template."],
+      ["Built-in CRM & booking", "Customers pick a service and time synced live to your calendar."],
+      [
+        "Service and area pages",
+        "Structured local pages across UK, US, Canadian, and Australian cities.",
+      ],
+      ["Technical SEO & GEO", "Schema markup, metadata, and AI-ready copy set up from day one."],
+      ["Embedded AI ready", "Connects seamlessly with our 24/7 AI voice agent and website chat."],
+      ["Care plan", "Managed hosting, SSL, updates, and fixes for $19 a month."],
     ]),
     faq: questions([
-      ["How long does a website take?", "Starter websites launch in 1 to 2 weeks."],
       [
-        "Can I update the site myself?",
-        "Yes. You can change text and photos yourself, or we do it for you on the care plan.",
+        "How long does a website take?",
+        "Starter websites launch in 1 to 2 weeks, while Growth builds with AI voice and CRM automation go live in 2 to 3 weeks with no lock-in contracts.",
       ],
       [
-        "Can you redesign my current site?",
-        "Yes. We keep what works, fix what does not and move your content across.",
+        "How does the website sync bookings into my CRM and calendar?",
+        "Every appointment or quote form writes straight into the website's built-in CRM and syncs two-way with your calendar using timezone-aware scheduling, sending instant email and WhatsApp alerts.",
+      ],
+      [
+        "Can the 24/7 AI voice agent be added right inside my new website?",
+        "Yes. We can embed our 24/7 AI Voice Calling Agent directly on your website and connect it to your existing UK (+44), US/Canada (+1), or Australian (+61) business number.",
+      ],
+      [
+        "Do websites meet regional privacy rules in the UK, US, Canada, and Australia?",
+        "Yes. Forms, cookie consent, and CRM data handling are configured cleanly for UK GDPR, US TCPA consent notices, Canadian PIPEDA, and Australian Privacy Principles (APPs).",
       ],
     ]),
     images: [
@@ -87,40 +102,61 @@ export const services: Service[] = [
     id: "ai-calling-agent",
     temp: { strip: ["calling-phone-desk"] },
     title: "24/7 AI Calling Agent",
-    short: "Never miss a call again",
+    short: "Never miss a call on web or local numbers",
     description:
-      "An AI receptionist that answers every call, books appointments, answers common questions and sends you the details, day and night.",
+      "A 24/7 AI Voice Calling Agent embedded into your website and connected to your local phone number (+44 UK, +1 US/Canada, +61 Australia) with timezone-aware booking.",
+    answerFirst:
+      "Incodet builds 24/7 AI Voice Calling Agents embedded directly into your website and connected to your local business phone number (+44 UK, +1 US/Canada, +61 Australia). Every incoming call is answered in under a second with timezone-aware calendar booking, qualification, and instant owner alerts so missed calls become revenue.",
     color: "bg-service-calling",
     to: "/services/ai-calling-agent",
-    heroTitle: "24/7 AI Calling Agent for Your Business",
+    heroTitle: "24/7 AI Voice Calling Agent for Local Business Numbers",
     tags: [
-      "24/7 answering",
-      "Appointment booking",
+      "+44 / +1 / +61 numbers",
+      "Website voice widget",
+      "Timezone-aware booking",
+      "CRM sync",
       "Owner alerts",
-      "Custom voice",
       "Call summaries",
-      "Calendar sync",
     ],
     features: features([
-      ["Answers every call", "Day, night and weekends, with no hold music."],
-      ["Books appointments", "Straight into your calendar, with the caller's details."],
-      ["Answers common questions", "Prices, hours, areas and services, in your words."],
-      ["Sends you the details", "A summary by email or WhatsApp after every call."],
-      ["Flags urgent calls", "Urgent messages reach you straight away."],
+      [
+        "Local number or website embed",
+        "Answers +44, +1, and +61 lines plus web voice calls 24/7.",
+      ],
+      [
+        "Timezone-aware booking",
+        "Checks open slots in your local timezone and books callers immediately.",
+      ],
+      [
+        "Direct CRM & calendar sync",
+        "Logs caller details, transcripts, and job type straight into your CRM.",
+      ],
+      [
+        "Trained on your services",
+        "Handles pricing ranges, opening hours, and service areas accurately.",
+      ],
+      [
+        "Instant owner alerts",
+        "Sends concise call summaries and urgent flags via email or WhatsApp.",
+      ],
       ["Pay for what you use", "300 minutes a month on Growth, extra minutes $0.20 only if used."],
     ]),
     faq: questions([
       [
-        "Will callers know it is an AI?",
-        "Yes. The agent introduces itself as a virtual assistant for your business.",
+        "How does the AI calling agent connect to my UK (+44), US/Canada (+1), or Australian (+61) phone number?",
+        "You can forward unanswered or after-hours calls from your existing local number, connect a dedicated +44, +1, or +61 number, and embed a one-click web voice button right on your site.",
       ],
       [
-        "What happens with an urgent call?",
-        "The agent takes a message marked urgent and alerts you straight away.",
+        "How do bookings sync with my CRM and calendar across timezones?",
+        "During each call, the agent checks real-time availability in your exact local timezone, confirms the slot with the caller, writes the lead into your built-in CRM, and emails or WhatsApps you immediately.",
+      ],
+      [
+        "What is the ROI of stopping missed calls, and is it GDPR, TCPA, and APP compliant?",
+        "Because most callers hang up on voicemail, capturing even one or two missed jobs a week typically pays for the plan many times over. Call handling follows UK GDPR, US TCPA, Canadian PIPEDA, and Australian Privacy Principles transparency notices.",
       ],
       [
         "How long does setup take?",
-        "The Growth plan, with the calling agent, goes live in 2 to 3 weeks.",
+        "The Growth plan, with the calling agent and website CRM integration, goes live in 2 to 3 weeks.",
       ],
     ]),
     images: ["summit-ridge-roofing", "bloom-studio"],
@@ -131,35 +167,47 @@ export const services: Service[] = [
     id: "ai-chatbot",
     temp: { strip: ["chatbot-bloom-assistant"] },
     title: "AI Website Chatbot",
-    short: "Answers on your site, around the clock",
+    short: "Answers visitors and books jobs 24/7",
     description:
-      "A chatbot trained on your services, prices and hours that replies instantly, captures leads and books customers straight from your website.",
+      "An AI website chatbot trained on your services, prices, and policies that answers questions, captures leads into your CRM, and books appointments around the clock.",
+    answerFirst:
+      "Incodet deploys custom AI Website Chatbots trained directly on your services, pricing, policies, and live calendar availability for service businesses in the UK, US, Canada, and Australia. Embedded on every page, visitors get instant answers around the clock, submit qualified lead details, and book open appointments without ringing reception.",
     color: "bg-service-chat",
     to: "/services/ai-chatbot",
-    heroTitle: "AI Website Chatbot for Your Business",
+    heroTitle: "AI Website Chatbot Built for Instant Lead Capture & Booking",
     tags: [
       "Website chat",
-      "Lead capture",
-      "Bookings",
+      "Built-in CRM capture",
+      "Timezone-aware booking",
       "Trained on your business",
       "Owner alerts",
       "Multi-page",
     ],
     features: features([
-      ["Instant answers", "Replies in seconds to questions about your services."],
-      ["Captures leads", "Collects names, numbers and what the customer needs."],
-      ["Books customers", "Sends visitors straight to an open booking slot."],
-      ["Trained on your business", "Uses your prices, hours and policies, nothing generic."],
-      ["Owner alerts", "You get every new lead by email or WhatsApp."],
-      ["Works on every page", "One small widget on your whole site."],
+      ["Instant answers", "Replies in seconds using your exact pricing, service areas, and FAQs."],
+      ["Captures CRM leads", "Saves visitor names, phone numbers, and job notes automatically."],
+      ["Books open slots", "Guides ready visitors straight into timezone-aware calendar slots."],
+      ["Zero generic fluff", "Strictly grounded in your business knowledge with human handoff."],
+      ["Owner alerts", "New website leads arrive instantly via email or WhatsApp."],
+      ["Pairs with AI voice", "Runs alongside our 24/7 AI voice calling widget on every device."],
     ]),
     faq: questions([
       [
-        "Can it handle questions it does not know?",
-        "It says it is not sure and takes the customer's details so you can reply.",
+        "How do chat bookings sync into our CRM and calendar?",
+        "Whenever a visitor requests an appointment or quote in chat, details flow straight into your built-in CRM and calendar link with automatic email or WhatsApp confirmation.",
       ],
-      ["Can I buy the chatbot on its own?", "Yes. Every feature is also available on its own."],
-      ["Which websites does it work with?", "Any website. It is one small code snippet."],
+      [
+        "Can I embed this chatbot alongside the 24/7 AI calling agent?",
+        "Yes. Both share the same approved business knowledge base so callers on your +44, +1, or +61 line and website chat visitors receive identical pricing and availability.",
+      ],
+      [
+        "What happens if a visitor asks something outside its training?",
+        "The assistant clearly states it is not sure and captures the visitor's contact information or offers a direct call or WhatsApp handoff so your team never loses the enquiry.",
+      ],
+      [
+        "How does chat handle privacy across the UK, USA, Canada, and Australia?",
+        "Conversations store only session-necessary details and explicit enquiry submissions aligned with UK GDPR, US TCPA, Canadian PIPEDA, and Australian Privacy Principles standards.",
+      ],
     ]),
     images: ["northpoint-dental", "bloom-studio"],
     ui: "chat",
@@ -174,38 +222,49 @@ export const services: Service[] = [
       after: "appdev-humandata-mobile-after",
     },
     title: "Mobile App Development",
-    short: "Cross-platform mobile apps built to last",
+    short: "iOS and Android apps synced with your CRM",
     description:
-      "We plan, design and build mobile apps for bookings, loyalty, ordering and internal teams, with a clean admin panel behind them.",
+      "Cross-platform iOS and Android apps for bookings, loyalty, ordering, and field teams, synced directly with a central web CRM and admin portal.",
+    answerFirst:
+      "Incodet plans, designs, and engineers cross-platform iOS and Android mobile apps for growing service companies, clinics, and multi-site operators across the UK, US, Canada, and Australia. Paired with a centralized web CRM admin panel and automated booking notifications, teams retain repeat customers and manage daily schedules in one place.",
     color: "bg-service-app",
     to: "/services/app-development",
-    heroTitle: "Mobile App Development for iOS and Android",
+    heroTitle: "Mobile App Development for iOS, Android & Service Teams",
     tags: [
-      "iOS",
-      "Android",
-      "Cross-platform",
-      "Admin panel",
-      "Push notifications",
-      "App store launch",
+      "iOS & Android",
+      "Unified CRM",
+      "Timezone-aware",
+      "Admin portal",
+      "Push alerts",
+      "Store launch",
     ],
     features: features([
+      ["Product scoping", "Clear screen maps, user roles, and delivery milestones before build."],
+      ["Cross-platform UI", "Clean, thumb-friendly interfaces tailored for iOS and Android."],
       [
-        "Product scoping",
-        "We lock down core screens, user roles, and milestones before development starts.",
+        "Shared CRM backend",
+        "Customer bookings, notes, and status sync live with your web portal.",
       ],
+      ["Admin portal", "Manage staff calendars, enquiries, and invoices from desktop."],
       [
-        "Cross-platform UI",
-        "Clean, thumb-friendly interfaces tailored for both iOS and Android devices.",
+        "Push notifications",
+        "Automated reminders reduce missed appointments across local timezones.",
       ],
-      ["Build", "One codebase for both platforms where it fits."],
-      ["Admin panel", "Manage users, bookings and content from the web."],
-      ["Notifications", "Reminders and updates that bring users back."],
-      ["Store launch", "We handle App Store and Google Play submission."],
+      ["Store submission", "Full App Store and Google Play compliance and release handling."],
     ]),
     faq: questions([
-      ["How long does an app take?", "Most apps take 4 to 8 weeks, on our Scale plan."],
-      ["iPhone, Android or both?", "Usually both from one codebase, so you pay for one build."],
-      ["Do you maintain the app after launch?", "Yes, through a monthly care plan."],
+      [
+        "How long does an app take?",
+        "Most apps take 4 to 8 weeks, on our Scale plan, using a single shared iOS and Android codebase.",
+      ],
+      [
+        "Does the mobile app connect to our website CRM and AI calling agent?",
+        "Yes. Bookings taken via your website, mobile app, or +44, +1, and +61 AI voice line can write into one unified CRM database and calendar.",
+      ],
+      [
+        "How are push notifications and regional privacy handled?",
+        "Push permissions and customer data flows follow App Store, Google Play, UK GDPR, US TCPA, PIPEDA, and Australian Privacy Principles requirements.",
+      ],
     ]),
     images: [],
     related: [],
@@ -219,30 +278,45 @@ export const services: Service[] = [
       after: "uiux-bloom-mobile-after",
     },
     title: "UI/UX & Product Design",
-    short: "Clearer interfaces from wireframe to handoff",
+    short: "Conversion-led interfaces from wireframe to build",
     description:
-      "End-to-end UX discovery, interactive user flows, and production-ready Figma component libraries built for clean implementation.",
+      "UX discovery, conversion-focused user flows, and developer-ready Figma systems crafted to turn website and software traffic into booked enquiries.",
+    answerFirst:
+      "Incodet delivers UX discovery, conversion-focused wireframes, interactive prototypes, and developer-ready Figma component systems for service businesses and SaaS founders in the UK, US, Canada, and Australia. By removing friction from booking, quoting, and intake screens, every visitor reaches a confirmed appointment faster with fewer abandoned sessions.",
     color: "bg-service-design",
     to: "/services/ui-ux-product-design",
-    heroTitle: "UI/UX & Product Design for Websites and Apps",
-    tags: ["UX research", "User flows", "Wireframes", "UI design", "Prototypes", "Design systems"],
+    heroTitle: "UI/UX & Product Design Built to Convert Visitors into Bookings",
+    tags: [
+      "UX research",
+      "Booking flows",
+      "Wireframes",
+      "UI design",
+      "Prototypes",
+      "Design systems",
+    ],
     features: features([
-      ["Research", "We learn who your users are and what they need."],
-      ["User flows", "The shortest path to every important action."],
-      ["Wireframes", "Layouts agreed before any colour or detail."],
-      ["UI design", "Polished screens that match your brand."],
-      ["Prototypes", "Clickable designs you can test before building."],
-      ["Design systems", "Reusable components so every new screen stays consistent."],
+      [
+        "Research & audits",
+        "Identify where visitors drop off before booking or requesting a quote.",
+      ],
+      ["Frictionless flows", "Shortest path from landing page to confirmed calendar slot."],
+      ["Wireframes", "Clear information hierarchy agreed before visual polish begins."],
+      ["UI design", "Distinctive interfaces aligned with your local brand positioning."],
+      ["Clickable prototypes", "Test key booking and portal screens before engineering starts."],
+      ["Figma systems", "Reusable components ready for fast production handoff."],
     ]),
     faq: questions([
       [
-        "Can you only design, without building?",
-        "Yes. You get ready-to-build design files and a handover.",
+        "Can you redesign an outdated local service site to increase bookings?",
+        "Yes. We audit why visitors leave, rebuild mobile-first quoting and scheduling flows, and test interactive prototypes before launching the live build.",
       ],
-      ["Which tools do you design in?", "Figma, with files shared with your team."],
       [
-        "Can you improve an existing product?",
-        "Yes. We review it, find what slows users down and redesign those parts first.",
+        "Do you design interfaces that include AI voice widgets and CRM dashboards?",
+        "Yes. We design cohesive patterns across public booking sites, embedded 24/7 AI chat/voice drawers, and private client portals.",
+      ],
+      [
+        "Can we hire Incodet strictly for UI/UX design in Figma?",
+        "Yes. You receive organized, componentized Figma files and complete developer handoff specifications.",
       ],
     ]),
     images: ["western-cars-redesign-concept", "bloom-studio", "brighton-taxi"],
@@ -253,35 +327,62 @@ export const services: Service[] = [
     id: "software",
     temp: { strip: ["software-portal-demo", "software-brhex-floorplan"] },
     title: "SaaS & Custom Software",
-    short: "Custom software shaped around your workflow",
+    short: "Bespoke CRMs, portals & booking engines",
     description:
-      "Tailored CRMs, client portals, scheduling systems, and full SaaS tools engineered for long-term reliability.",
+      "Custom CRMs, online booking systems, client portals, and SaaS platforms engineered for multi-location and growing businesses in the UK, US, Canada, and Australia.",
+    answerFirst:
+      "Incodet engineers bespoke CRMs, online booking systems, client portals, and vertical SaaS platforms for established businesses across the UK, US, Canada, and Australia. Delivered in 4 to 8 weeks, each custom platform replaces scattered spreadsheets and disconnected tools with automated scheduling, billing, and real-time operational visibility.",
     color: "bg-service-software",
     to: "/custom-software",
-    heroTitle: "SaaS & Custom Software Built Around Your Business",
+    heroTitle: "Custom CRMs, Client Portals & SaaS Built Around Your Workflow",
     tags: [
-      "CRMs",
-      "Dashboards",
-      "Booking systems",
+      "Custom CRMs",
       "Client portals",
+      "Booking engines",
       "SaaS platforms",
-      "Integrations",
+      "AI integrations",
+      "Dashboards",
     ],
     features: features([
-      ["CRMs", "Keep every customer, job and conversation in one place."],
-      ["Dashboards", "See bookings, calls and sales at a glance."],
-      ["Booking systems", "Online booking that fits your services, staff and hours."],
-      ["Client portals", "Give clients one place for progress, files and invoices."],
-      ["Education platforms", "Courses, students and progress tracking in one system."],
+      ["Bespoke CRMs", "Track every enquiry, missed call recovery, quote, and job in one place."],
       [
-        "Medical and clinic platforms",
-        "Appointments, patient records and reminders built for clinics.",
+        "Client portals",
+        "Give clients live milestones, deliverables, and online invoice payments.",
+      ],
+      [
+        "Timezone-aware booking",
+        "Multi-branch scheduling across UK, North American, and Australian zones.",
+      ],
+      [
+        "AI voice & data pipelines",
+        "Route incoming call transcripts and summaries straight to job records.",
+      ],
+      [
+        "Operations dashboards",
+        "Real-time visibility into lead sources, bookings, and staff capacity.",
+      ],
+      [
+        "API integrations",
+        "Clean sync with Stripe, accounting, calendars, and internal databases.",
       ],
     ]),
-    faq: faqFor([
-      "What does each plan include?",
-      "How long does it take?",
-      "What happens after launch?",
+    faq: questions([
+      [
+        "How does custom CRM software connect to your 24/7 AI voice calling agent?",
+        "Calls answered on your +44, +1, or +61 numbers or website voice widget write transcripts, caller details, and timezone-aware bookings straight into your custom CRM.",
+      ],
+      [
+        "How long does a Scale custom software project take?",
+        "Scale platforms typically launch in 4 to 8 weeks with weekly demos, documented architecture, and no lock-in contracts.",
+      ],
+      [
+        "Can you build multi-region systems meeting GDPR, PIPEDA, TCPA, and APPs?",
+        "Yes. Role-based access, audit logs, data residency choices, and consent controls are built in to match UK GDPR, US TCPA, Canadian PIPEDA, and Australian Privacy Principles.",
+      ],
+      [
+        "Can I try an example of Incodet's client portal?",
+        "Yes. Visit our live interactive Client Portal Demo at /portal/demo to explore real milestones, deliverables, and invoice tracking.",
+      ],
     ]),
     images: ["brhex-studio", "western-cars-content-hub"],
     related: ["brhex-studio", "western-cars-content-hub"],
@@ -289,30 +390,38 @@ export const services: Service[] = [
   {
     id: "business-automation",
     title: "Business Automation",
-    short: "Busywork that runs on its own",
+    short: "Automated CRM sync, alerts & follow-ups",
     description:
-      "Reminders, follow-ups, notifications and data syncing between your tools, so your team spends time on customers, not admin.",
+      "Automated reminders, quote follow-ups, WhatsApp and email owner alerts, and live CRM calendar sync connecting your website and AI receptionists.",
+    answerFirst:
+      "Incodet builds automated customer follow-ups, booking reminders, CRM syncing, and owner alert workflows for busy local service teams across the UK, US, Canada, and Australia. By connecting your website, AI voice agent, calendar, and inbox, businesses eliminate manual data entry, reduce appointment no-shows, and respond to leads automatically.",
     color: "bg-service-automation",
     to: "/services/business-automation",
-    heroTitle: "Business Automation for Your Everyday Work",
-    tags: ["Reminders", "Follow-ups", "Notifications", "Tool syncing", "Reports", "Workflows"],
+    heroTitle: "Business Automation Connecting Calls, Calendars & Your CRM",
+    tags: ["Booking reminders", "CRM sync", "Follow-ups", "Owner alerts", "Reports", "Workflows"],
     features: features([
-      ["Booking reminders", "Fewer no-shows with automatic texts and emails."],
-      ["Follow-ups", "Quote and review requests sent at the right time."],
-      ["Owner notifications", "Know about every booking, lead and payment."],
-      ["Tool syncing", "Your calendar, CRM and sheets stay in sync."],
-      ["Simple reports", "A weekly summary of what came in."],
-      ["Custom workflows", "Repetitive steps turned into one click or none."],
+      ["Appointment reminders", "Automated SMS and email confirmations cut costly no-shows."],
+      ["Missed-call text back", "Instant follow-ups capture leads before they ring a competitor."],
+      ["Owner notifications", "Real-time WhatsApp and email alerts for every booking and quote."],
+      ["Two-way tool sync", "Calendars, CRM pipelines, invoices, and sheets stay aligned."],
+      [
+        "Weekly performance summaries",
+        "Clear reporting on calls answered, leads saved, and jobs booked.",
+      ],
+      ["Custom workflows", "Eliminate repetitive copying between forms, calls, and calendars."],
     ]),
     faq: questions([
       [
-        "Which tools can you connect?",
-        "Most tools with an API or Zapier-style connection. We check yours on the discovery call.",
+        "How do automations link the AI calling agent and website CRM together?",
+        "Every phone call (+44, +1, +61) and web booking automatically triggers CRM record creation, timezone-accurate calendar invites, customer confirmations, and owner alerts.",
       ],
-      ["Do I need new software?", "Usually not. We automate the tools you already use."],
       [
-        "How is it priced?",
-        "As a one-time setup plus a small monthly fee, quoted after the discovery call.",
+        "Do I have to replace all of my current software tools?",
+        "Usually no. We automate and connect the calendars, inboxes, and CRMs you already use whenever APIs or webhooks are supported.",
+      ],
+      [
+        "Are automated SMS and email follow-ups compliant across regions?",
+        "Yes. Opt-in checkboxes, quiet hours by recipient timezone, and unsubscribe links follow UK GDPR, US TCPA, PIPEDA, and Australian Privacy Principles rules.",
       ],
     ]),
     images: ["western-cars-content-hub"],
@@ -325,40 +434,49 @@ export const services: Service[] = [
       hero: "social-studio-lights-wide",
     },
     title: "Social Media Growth",
-    short: "More reach, more enquiries",
+    short: "Local campaigns that drive booked enquiries",
     description:
-      "Content planning, design and paid campaigns on Facebook, Instagram and TikTok that send local customers to your website and booking page.",
+      "Content planning, design, short-form videos, and paid campaigns that send local buyers straight to your booking website and 24/7 AI receptionist.",
+    answerFirst:
+      "Incodet creates structured social content plans, branded visuals, short-form videos, and local paid ad campaigns for service businesses across the UK, US, Canada, and Australia. Every campaign drives qualified local traffic straight into your custom booking website and 24/7 AI receptionist, turning attention into measurable booked jobs.",
     color: "bg-service-social",
     to: "/services/social-media-growth",
-    heroTitle: "Social Media Growth for Local Businesses",
+    heroTitle: "Social Media Growth Built to Drive Local Bookings",
     tags: [
       "Content planning",
       "Post design",
       "Short videos",
-      "Paid ads",
+      "Local paid ads",
       "Facebook & Instagram",
       "TikTok",
     ],
     features: features([
-      ["Content plan", "A monthly plan built around your services and seasons."],
-      ["Post design", "On-brand posts and stories, ready to publish."],
-      ["Short videos", "Simple reels and TikToks that show your work."],
-      ["Paid campaigns", "Local ads that send people to your booking page."],
-      ["Profile setup", "Bios, links and highlights that turn visits into enquiries."],
-      ["Monthly review", "What worked, what did not and what we change next."],
+      ["Content plan", "Monthly calendars tailored to your local seasons and peak demand."],
+      ["Post design", "Branded visuals and carousels engineered to build local trust."],
+      ["Short videos", "Reels and TikToks showcasing real finished jobs and customer proof."],
+      ["Local paid ads", "Geo-targeted ads linking straight into your online booking funnel."],
+      ["Profile optimization", "Bios, booking links, and local call numbers ready to convert."],
+      ["Monthly review", "Clear reporting focused on clicks, calls, and booked appointments."],
     ]),
     faq: questions([
-      ["Do you post for us?", "Yes, we can schedule and post, or hand you ready-made content."],
+      [
+        "Where do social ads send local visitors to maximize return on ad spend?",
+        "Ads send clicks directly to fast booking landing pages backed by your built-in CRM, AI chat, and 24/7 AI calling agent so enquiries convert immediately.",
+      ],
+      [
+        "Can you target specific cities across the UK, US, Canada, or Australia?",
+        "Yes. Paid campaigns geo-target exact service postcodes, suburbs, or cities around your branches.",
+      ],
       [
         "Is ad spend included?",
-        "No. Ad spend is paid directly to the platform; our fee covers planning, design and management.",
+        "No. Ad spend is paid directly to the platform; our fee covers strategy, creative production, and campaign management.",
       ],
-      ["Which platforms?", "Facebook, Instagram and TikTok."],
     ]),
     images: [],
     related: [],
   },
 ];
+
 export function getService(id: string) {
   const service = services.find((s) => s.id === id);
   if (!service) throw new Error("Unknown service");

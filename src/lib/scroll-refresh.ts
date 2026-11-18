@@ -1,6 +1,7 @@
 import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 
 let watching = false;
+let cleanupFn: (() => void) | undefined;
 
 /**
  * Keeps every ScrollTrigger in step with the real page layout.
@@ -11,8 +12,9 @@ let watching = false;
  * refreshes all triggers (debounced) whenever it actually changes, plus once after fonts and
  * window load. Refreshes only run when the height differs from the last refresh, so they never loop.
  */
-export function watchScrollLayout(ScrollTrigger: typeof ScrollTriggerType) {
-  if (watching || typeof window === "undefined") return;
+export function watchScrollLayout(ScrollTrigger: typeof ScrollTriggerType): () => void {
+  if (typeof window === "undefined") return () => {};
+  if (watching && cleanupFn) return cleanupFn;
   watching = true;
   const root = document.documentElement;
   let lastHeight = root.scrollHeight;
@@ -27,8 +29,21 @@ export function watchScrollLayout(ScrollTrigger: typeof ScrollTriggerType) {
     }, 150);
   };
 
-  new ResizeObserver(() => refresh()).observe(document.body);
+  const observer =
+    typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => refresh()) : null;
+  observer?.observe(document.body);
   void document.fonts?.ready.then(() => refresh(true));
+
+  const onLoad = () => refresh(true);
   if (document.readyState === "complete") refresh(true);
-  else window.addEventListener("load", () => refresh(true), { once: true });
+  else window.addEventListener("load", onLoad, { once: true });
+
+  cleanupFn = () => {
+    watching = false;
+    window.clearTimeout(timer);
+    observer?.disconnect();
+    window.removeEventListener("load", onLoad);
+    cleanupFn = undefined;
+  };
+  return cleanupFn;
 }

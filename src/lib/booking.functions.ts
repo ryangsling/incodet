@@ -64,13 +64,20 @@ export const submitBooking = createServerFn({ method: "POST" })
         error: "Please pick an available time at least 12 hours from now.",
       };
     try {
+      const { hasSupabaseAdminConfig, supabaseAdmin } =
+        await import("@/integrations/supabase/client.server");
+      if (!hasSupabaseAdminConfig()) {
+        return {
+          ok: false,
+          error: `Online booking submission is temporarily unavailable. Please message us on WhatsApp or email ${site.email}.`,
+        };
+      }
       const { consumeFormAllowance } = await import("./form-spam.server");
       if (!(await consumeFormAllowance()))
         return {
           ok: false,
           error: "Too many requests from this connection. Please try again later.",
         };
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const slot_end = new Date(time + booking.slotMinutes * 60_000).toISOString();
       const { data: row, error } = await supabaseAdmin
         .from("bookings")

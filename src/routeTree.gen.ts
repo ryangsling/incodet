@@ -20,6 +20,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiChatRouteImport } from './routes/api.chat'
 import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies.index'
 import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
@@ -105,6 +106,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CaseStudiesIndexRoute = CaseStudiesIndexRouteImport.update({
   id: '/case-studies/',
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/styleguide': typeof StyleguideRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/industries/barber-shops': typeof IndustriesBarberShopsRoute
   '/industries/car-rentals': typeof IndustriesCarRentalsRoute
@@ -326,6 +333,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
   '/terms': typeof TermsRoute
+  '/api/chat': typeof ApiChatRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/industries/barber-shops': typeof IndustriesBarberShopsRoute
   '/industries/car-rentals': typeof IndustriesCarRentalsRoute
@@ -371,6 +379,7 @@ export interface FileRoutesById {
   '/styleguide': typeof StyleguideRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/industries/barber-shops': typeof IndustriesBarberShopsRoute
   '/industries/car-rentals': typeof IndustriesCarRentalsRoute
@@ -416,6 +425,7 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/terms'
     | '/admin'
+    | '/api/chat'
     | '/case-studies/$slug'
     | '/industries/barber-shops'
     | '/industries/car-rentals'
@@ -458,6 +468,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/styleguide'
     | '/terms'
+    | '/api/chat'
     | '/case-studies/$slug'
     | '/industries/barber-shops'
     | '/industries/car-rentals'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/terms'
     | '/_authenticated/admin'
+    | '/api/chat'
     | '/case-studies/$slug'
     | '/industries/barber-shops'
     | '/industries/car-rentals'
@@ -546,6 +558,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleguideRoute: typeof StyleguideRoute
   TermsRoute: typeof TermsRoute
+  ApiChatRoute: typeof ApiChatRoute
   CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   IndustriesBarberShopsRoute: typeof IndustriesBarberShopsRoute
   IndustriesCarRentalsRoute: typeof IndustriesCarRentalsRoute
@@ -650,6 +663,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/case-studies/': {
       id: '/case-studies/'
@@ -916,6 +936,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleguideRoute: StyleguideRoute,
   TermsRoute: TermsRoute,
+  ApiChatRoute: ApiChatRoute,
   CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   IndustriesBarberShopsRoute: IndustriesBarberShopsRoute,
   IndustriesCarRentalsRoute: IndustriesCarRentalsRoute,

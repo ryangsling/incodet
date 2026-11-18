@@ -1,6 +1,7 @@
 import { GoogleGenAI, type Content } from "@google/genai";
 import { site } from "@/config/site";
 import {
+  CHAT_FALLBACK_MODEL,
   CHAT_MODEL,
   HOUR_MS,
   MAX_IP_MESSAGES_PER_HOUR,
@@ -10,7 +11,7 @@ import {
   type ChatMessage,
 } from "./chat-shared";
 
-export const INCODET_SYSTEM_PROMPT = `You are the assistant on incodet.com. You answer visitors' questions about Incodet using ONLY the information in the KNOWLEDGE section below.
+export const INCODET_SYSTEM_PROMPT = `You are Mary, the assistant on incodet.com. You answer visitors' questions about Incodet using ONLY the information in the KNOWLEDGE section below.
 
 STYLE
 - Short, friendly, plain English. 1 to 3 sentences, max 60 words, unless the visitor asks for detail.
@@ -73,8 +74,8 @@ export function toGeminiContents(messages: Pick<ChatMessage, "role" | "content">
 }
 
 export async function handleChatRequest(request: Request): Promise<Response> {
-  const apiKey = process.env["GEMINI_API_KEY"];
-  if (!apiKey) {
+  const apiKey = process.env["GEMINI_API_KEY"]?.trim();
+  if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
     return Response.json(
       {
         error:
@@ -136,22 +137,52 @@ export async function handleChatRequest(request: Request): Promise<Response> {
   }
 
   try {
-    const ai = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build",
+    const generate = (model: string, timeoutMs: number) => {
+      const ai = new GoogleGenAI({
+        apiKey,
+        httpOptions: {
+          timeout: timeoutMs,
+          headers: {
+            "User-Agent": "aistudio-build",
+          },
         },
-      },
-    });
+      });
+      return ai.models.generateContent({
+        model,
+        contents,
+        config: {
+          systemInstruction: INCODET_SYSTEM_PROMPT,
+        },
+      });
+    };
 
-    const response = await ai.models.generateContent({
-      model: CHAT_MODEL,
-      contents,
-      config: {
-        systemInstruction: INCODET_SYSTEM_PROMPT,
-      },
-    });
+    let response;
+    try {
+      response = await generate(CHAT_MODEL, 12_000);
+    } catch (primaryErr) {
+      const primaryStatus =
+        typeof primaryErr === "object" && primaryErr !== null && "status" in primaryErr
+          ? Number((primaryErr as { status?: unknown }).status)
+          : undefined;
+      const primaryMsg = primaryErr instanceof Error ? primaryErr.message : String(primaryErr);
+      if (
+        primaryStatus === 503 ||
+        primaryStatus === 504 ||
+        primaryStatus === 404 ||
+        primaryStatus === 500 ||
+        primaryMsg.includes("503") ||
+        primaryMsg.includes("504") ||
+        primaryMsg.includes("DEADLINE_EXCEEDED") ||
+        primaryMsg.includes("UNAVAILABLE") ||
+        primaryMsg.includes("NOT_FOUND") ||
+        primaryMsg.toLowerCase().includes("timeout") ||
+        primaryMsg.toLowerCase().includes("abort")
+      ) {
+        response = await generate(CHAT_FALLBACK_MODEL, 25_000);
+      } else {
+        throw primaryErr;
+      }
+    }
 
     const reply = response.text?.trim();
     if (!reply) {

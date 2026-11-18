@@ -89,7 +89,7 @@ export function Hero() {
   const pullTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    document.documentElement.dataset.heroMode = mode;
+    document.documentElement.dataset["heroMode"] = mode;
     window.dispatchEvent(new CustomEvent("hero-mode-change", { detail: mode }));
   }, [mode]);
 
@@ -124,9 +124,14 @@ export function Hero() {
   const nightVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    dayVideoRef.current?.play().catch(() => {});
-    nightVideoRef.current?.play().catch(() => {});
-  }, []);
+    if (mode === "day") {
+      nightVideoRef.current?.pause();
+      dayVideoRef.current?.play().catch(() => {});
+    } else {
+      dayVideoRef.current?.pause();
+      nightVideoRef.current?.play().catch(() => {});
+    }
+  }, [mode]);
 
   const handleScrollDown = () => {
     const next = sectionRef.current?.nextElementSibling as HTMLElement | null;
@@ -166,8 +171,9 @@ export function Hero() {
           loop
           muted
           playsInline
+          preload="metadata"
           suppressHydrationWarning
-          poster="/images/hero/hero-bg.jpg"
+          poster="/images/hero/hero-bg.webp"
           className={cn(
             "pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out",
             mode === "day" ? "opacity-100" : "opacity-0",
@@ -177,12 +183,12 @@ export function Hero() {
           ref={nightVideoRef}
           key="hero-video-night"
           src={NIGHT_VIDEO}
-          autoPlay
           loop
           muted
           playsInline
+          preload={mode === "dark" ? "metadata" : "none"}
           suppressHydrationWarning
-          poster="/images/hero/hero-bg-night.jpg"
+          poster="/images/hero/hero-bg-night.webp"
           className={cn(
             "pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out",
             mode === "dark" ? "opacity-100" : "opacity-0",
@@ -199,10 +205,10 @@ export function Hero() {
           Your Business <Accent>Never Sleeps</Accent>
         </h1>
 
-        <div className="animate-hero-subtitle mt-5 max-w-[580px] sm:mt-6">
+        <div className="animate-hero-subtitle mt-5 max-w-[640px] sm:mt-6">
           <p className="type-body font-normal text-[16px] leading-relaxed text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.75)] text-balance sm:text-[18px]">
-            AI that answers calls, books appointments and replies to customers, so your business
-            never stops.
+            High-converting booking websites with built-in CRM and 24/7 AI voice calling agents for
+            local service businesses in the UK, US, Canada &amp; Australia.
           </p>
         </div>
 

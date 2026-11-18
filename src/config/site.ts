@@ -2,7 +2,7 @@ import { industries } from "@/content/industries";
 // Single source of truth for brand and contact details. Never hardcode these elsewhere.
 export const site = {
   name: "Incodet",
-  siteUrl: "https://incodet.com",
+  siteUrl: "https://www.incodet.com",
   logoUrl: "",
   email: "hello@incodet.com",
   phoneDisplay: "+61 451 526 342",

@@ -10,7 +10,7 @@ import {
   liveLabel,
 } from "@/components/site/CaseStudyCard";
 import { seoHead } from "@/components/site/PageHero";
-import { breadcrumbLd } from "@/lib/seo";
+import { articleLd, breadcrumbLd } from "@/lib/seo";
 import { Reveal, Section, SectionHeading } from "@/components/site/primitives";
 import { caseStudies, deliverySteps, getCaseStudy } from "@/content/caseStudies";
 
@@ -30,8 +30,10 @@ export const Route = createFileRoute("/case-studies/$slug")({
           {
             type: "article",
             scripts: [
+              articleLd(loaderData),
               breadcrumbLd([
-                { name: "Our work", path: "/case-studies" },
+                { name: "Home", path: "/" },
+                { name: "Case Studies", path: "/case-studies" },
                 { name: loaderData.name, path: `/case-studies/${loaderData.slug}` },
               ]),
             ],
@@ -143,6 +145,19 @@ function CaseStudyPage() {
               ))}
             </ul>
           </Reveal>
+          {c.outcomes && c.outcomes.length > 0 && (
+            <Reveal className="md:col-span-2 rounded-card border border-border bg-bg-soft p-6 md:p-8">
+              <h2 className="type-h3">Key outcomes &amp; business impact</h2>
+              <ul className="mt-4 grid gap-3 md:grid-cols-3">
+                {c.outcomes.map((o) => (
+                  <li key={o} className="flex items-start gap-2.5 type-small-body text-ink">
+                    <span className="mt-1 size-2 shrink-0 rounded-full bg-ink" aria-hidden />
+                    <span>{o}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          )}
           {c.tags && c.tags.length > 0 && (
             <Reveal className="md:col-span-2">
               <h2 className="type-h3">Tech used</h2>

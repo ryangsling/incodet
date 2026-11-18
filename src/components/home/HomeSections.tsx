@@ -278,7 +278,7 @@ export function BookingCta({ service }: { service?: string } = {}) {
               Book a free call
             </h2>
             <p className="mx-auto mt-5 max-w-xl type-body text-on-dark-muted">
-              Tell us what your business needs in a quick 30-minute chat—clear plan, transparent
+              Tell us what your business needs in a quick 30-minute chat: clear plan, transparent
               pricing, no pressure.
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
