@@ -80,7 +80,7 @@ export function Footer() {
       <div className="container-site">
         <div className="grid gap-14 lg:grid-cols-[1.3fr_2fr]">
           <div>
-            <Logo />
+            <Logo className="h-8 w-auto" />
             <p className="mt-8 max-w-md text-[34px] leading-[1.15] font-medium tracking-tight text-ink md:text-[44px]">
               Pay for what you use. Nothing more.
             </p>
@@ -122,7 +122,7 @@ export function Footer() {
               </div>
             </dl>
             <div className="mt-10 grid w-full gap-3 sm:w-fit">
-              <PillLink to="/book" className="w-full">
+              <PillLink to="/booking" className="w-full">
                 Book a Free Call
               </PillLink>
               <PillLink to="/deck" variant="secondary" className="w-full border-ink">
@@ -224,7 +224,7 @@ export function Footer() {
         </section>
 
         <div className="mt-20 flex flex-col gap-4 border-t border-border pt-8 type-small text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <p>© 2026 {site.name}. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} Incodet. All rights reserved.</p>
           <div className="flex gap-6">
             <Link
               to="/privacy"

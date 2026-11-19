@@ -86,7 +86,7 @@ export function IndustryPage({ slug }: { slug: string }) {
         title={p.h1}
         actions={
           <>
-            <PillLink to="/book" size="lg">
+            <PillLink to="/booking" size="lg">
               Book a Free Call
             </PillLink>
             <PillLink to="/pricing" variant="secondary" size="lg">

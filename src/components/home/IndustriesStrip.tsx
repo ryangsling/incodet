@@ -41,9 +41,9 @@ export function IndustriesStrip() {
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       if (card.isCustomAction) {
-        window.location.hash = "booking";
+        void navigate({ to: "/booking" });
       } else {
-        navigate({ to: card.href });
+        void navigate({ to: card.href });
       }
     }
   };
@@ -97,9 +97,9 @@ export function IndustriesStrip() {
                 onKeyDown={(e) => handleCardKeyDown(e, idx, card)}
                 onClick={() => {
                   if (card.isCustomAction) {
-                    window.location.hash = "booking";
+                    void navigate({ to: "/booking" });
                   } else {
-                    navigate({ to: card.href });
+                    void navigate({ to: card.href });
                   }
                 }}
                 style={{
@@ -117,7 +117,7 @@ export function IndustriesStrip() {
                 {/* Full-bleed background image */}
                 <div
                   className={cn(
-                    "absolute inset-0 size-full transition-opacity duration-500",
+                    "pointer-events-none absolute inset-0 size-full transition-opacity duration-500",
                     isActive ? "opacity-100" : "opacity-35",
                   )}
                 >
@@ -132,7 +132,7 @@ export function IndustriesStrip() {
                 <div
                   aria-hidden
                   className={cn(
-                    "absolute inset-0 transition-opacity duration-500",
+                    "pointer-events-none absolute inset-0 transition-opacity duration-500",
                     isActive
                       ? "bg-gradient-to-t from-black/95 via-black/55 to-black/20"
                       : "bg-black/55 hover:bg-black/45",
@@ -143,8 +143,8 @@ export function IndustriesStrip() {
                 <div
                   aria-hidden={isActive}
                   className={cn(
-                    "absolute inset-0 flex flex-col items-center justify-end pb-6 z-10 transition-opacity duration-300",
-                    isActive ? "pointer-events-none opacity-0" : "opacity-100 delay-100",
+                    "pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-6 transition-opacity duration-300",
+                    isActive ? "opacity-0" : "opacity-100 delay-100",
                   )}
                 >
                   <span className="mb-4 whitespace-nowrap text-[12px] font-semibold tracking-wider text-white/90 uppercase [writing-mode:vertical-rl] rotate-180">
@@ -161,7 +161,7 @@ export function IndustriesStrip() {
                   className={cn(
                     "absolute inset-0 z-20 flex flex-col justify-end p-7 lg:p-8 text-white transition-all duration-300",
                     isActive
-                      ? "translate-y-0 opacity-100 delay-150"
+                      ? "pointer-events-auto translate-y-0 opacity-100 delay-150"
                       : "pointer-events-none translate-y-3 opacity-0",
                   )}
                 >
@@ -179,20 +179,30 @@ export function IndustriesStrip() {
                   </p>
 
                   {/* Action Link or Button */}
-                  <div className="mt-5">
+                  <div className="relative z-30 mt-5">
                     {card.isCustomAction ? (
-                      <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-ink shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95">
+                      <Link
+                        to="/booking"
+                        onClick={(e) => e.stopPropagation()}
+                        tabIndex={isActive ? 0 : -1}
+                        className="relative z-30 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-ink shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+                      >
                         {card.actionLabel ?? "Book a Free Call"}
                         <ArrowRight aria-hidden className="size-3.5" />
-                      </span>
+                      </Link>
                     ) : (
-                      <span className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-white transition-colors hover:text-white/80">
+                      <Link
+                        to={card.href}
+                        onClick={(e) => e.stopPropagation()}
+                        tabIndex={isActive ? 0 : -1}
+                        className="group/link relative z-30 inline-flex items-center gap-1.5 text-sm font-medium text-white transition-colors hover:text-white/80"
+                      >
                         See how it works
                         <ArrowRight
                           aria-hidden
                           className="size-4 transition-transform duration-200 group-hover/link:translate-x-1"
                         />
-                      </span>
+                      </Link>
                     )}
                   </div>
                 </div>
@@ -227,9 +237,9 @@ export function IndustriesStrip() {
                     e.preventDefault();
                     if (isExpanded) {
                       if (card.isCustomAction) {
-                        window.location.hash = "booking";
+                        void navigate({ to: "/booking" });
                       } else {
-                        navigate({ to: card.href });
+                        void navigate({ to: card.href });
                       }
                     } else {
                       setMobileOpenId(card.id);
@@ -303,11 +313,11 @@ export function IndustriesStrip() {
                   <h3 className="text-xl font-bold tracking-tight text-white">{card.name}</h3>
                   <p className="mt-1 text-xs text-white/90 line-clamp-2">{card.benefit}</p>
 
-                  <div className="mt-3.5">
+                  <div className="relative z-30 mt-3.5">
                     {card.isCustomAction ? (
                       <Link
-                        to="/book"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-ink shadow-sm"
+                        to="/booking"
+                        className="relative z-30 inline-flex min-h-10 items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-ink shadow-sm"
                         onClick={(e) => {
                           e.stopPropagation();
                         }}

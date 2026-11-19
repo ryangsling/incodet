@@ -2,12 +2,15 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, Circle, CircleDot, Phone } 
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
   type PointerEvent as RPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import { loadScrollMotion } from "@/lib/scroll-motion";
 import { showcase } from "@/content/caseStudies";
 import { PillLink } from "@/components/site/Button";
@@ -149,67 +152,81 @@ export function FloatingProjects() {
   const ref = useRef<HTMLElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animated = desktop && !reduced;
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!animated) return;
     let cancelled = false;
     let revert: (() => void) | undefined;
-    void loadScrollMotion().then(({ gsap, ScrollTrigger }) => {
-      if (cancelled || !ref.current) return;
-      const mm = gsap.matchMedia();
-      mm.add(`${PIN_QUERY} and (prefers-reduced-motion: no-preference)`, () => {
-        const el = ref.current;
-        if (!el) return;
-        const tileEls = tileRefs.current.filter((t): t is HTMLDivElement => Boolean(t));
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            id: "floating-burst",
-            trigger: el,
-            start: "top top",
-            end: () => `+=${window.innerHeight * 2}`,
-            pin: true,
-            scrub: true,
-            invalidateOnRefresh: true,
-            // Pinned and scrubbed triggers refresh in page order (higher first).
-            refreshPriority: 50,
-            // Promote tiles to their own layers only while the section animates.
-            onToggle: (self) =>
-              gsap.set(tileEls, { willChange: self.isActive ? "transform" : "auto" }),
-          },
-        });
-        // Only transform and opacity animate. Scale stays near 1 so layers stay sharp.
-        tileRefs.current.forEach((tile, i) => {
-          if (!tile) return;
-          const angle = (i / tiles.length) * Math.PI * 2 - Math.PI / 2;
-          const dx = () => Math.cos(angle) * window.innerWidth * (0.38 + (i % 3) * 0.08);
-          const dy = () => Math.sin(angle) * window.innerHeight * (0.4 + (i % 2) * 0.1);
-          const at = i * 0.012;
-          tl.fromTo(
-            tile,
-            { x: 0, y: 0, scale: 0.6, opacity: 0 },
-            { x: dx, y: dy, scale: 1, opacity: 1, duration: 0.38, ease: "none" },
-            at,
-          ).to(
-            tile,
-            {
-              x: () => dx() * 2.5,
-              y: () => dy() * 2.5,
-              scale: 1.25,
-              opacity: 0,
-              duration: 0.4,
-              ease: "none",
+    void loadScrollMotion()
+      .then(({ gsap, ScrollTrigger }) => {
+        if (cancelled || !ref.current) return;
+        const mm = gsap.matchMedia();
+        mm.add(`${PIN_QUERY} and (prefers-reduced-motion: no-preference)`, () => {
+          const el = ref.current;
+          if (!el) return;
+          const tileEls = tileRefs.current.filter((t): t is HTMLDivElement => Boolean(t));
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              id: "floating-burst",
+              trigger: el,
+              start: "top top",
+              end: () => `+=${window.innerHeight * 2}`,
+              pin: true,
+              scrub: true,
+              invalidateOnRefresh: true,
+              // Pinned and scrubbed triggers refresh in page order (higher first).
+              refreshPriority: 50,
+              // Promote tiles to their own layers only while the section animates.
+              onToggle: (self) =>
+                gsap.set(tileEls, { willChange: self.isActive ? "transform" : "auto" }),
             },
-            0.5 + at,
-          );
+          });
+          // Only transform and opacity animate. Scale stays near 1 so layers stay sharp.
+          tileRefs.current.forEach((tile, i) => {
+            if (!tile) return;
+            const angle = (i / tiles.length) * Math.PI * 2 - Math.PI / 2;
+            const dx = () => Math.cos(angle) * window.innerWidth * (0.38 + (i % 3) * 0.08);
+            const dy = () => Math.sin(angle) * window.innerHeight * (0.4 + (i % 2) * 0.1);
+            const at = i * 0.012;
+            tl.fromTo(
+              tile,
+              { x: 0, y: 0, scale: 0.6, opacity: 0 },
+              { x: dx, y: dy, scale: 1, opacity: 1, duration: 0.38, ease: "none" },
+              at,
+            ).to(
+              tile,
+              {
+                x: () => dx() * 2.5,
+                y: () => dy() * 2.5,
+                scale: 1.25,
+                opacity: 0,
+                duration: 0.4,
+                ease: "none",
+              },
+              0.5 + at,
+            );
+          });
+          tl.to({}, { duration: 0.12 });
+          try {
+            ScrollTrigger.sort();
+            ScrollTrigger.refresh();
+          } catch {
+            // Ignore layout refresh errors during unmount
+          }
         });
-        tl.to({}, { duration: 0.12 });
-        ScrollTrigger.sort();
-        ScrollTrigger.refresh();
-      });
-      revert = () => {
-        mm.revert();
-        ScrollTrigger.getById("floating-burst")?.kill();
-      };
-    });
+        revert = () => {
+          try {
+            mm.revert();
+          } catch {
+            // Ignore GSAP pin-spacer cleanup race
+          }
+          try {
+            ScrollTrigger.getById("floating-burst")?.kill();
+          } catch {
+            // Ignore ScrollTrigger cleanup race
+          }
+        };
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
       revert?.();
@@ -233,68 +250,70 @@ export function FloatingProjects() {
     </div>
   );
   return (
-    <section
-      ref={ref}
-      aria-labelledby="team-title"
-      className={cn(
-        "burst-section relative overflow-hidden bg-bg-soft",
-        animated && "burst-animated",
-      )}
-    >
-      {animated && (
-        <div aria-hidden className="absolute inset-0 z-0">
-          {tiles.map((t, i) => (
-            <div
-              key={t.src}
-              ref={(el) => {
-                tileRefs.current[i] = el;
-              }}
-              className="burst-tile absolute left-1/2 top-1/2"
-              style={{ width: t.w, height: t.h, marginLeft: -t.w / 2, marginTop: -t.h / 2 }}
-            >
-              <TileImg t={t} className="size-full" />
+    <div>
+      <section
+        ref={ref}
+        aria-labelledby="team-title"
+        className={cn(
+          "burst-section relative overflow-hidden bg-bg-soft",
+          animated && "burst-animated",
+        )}
+      >
+        {animated && (
+          <div aria-hidden className="absolute inset-0 z-0">
+            {tiles.map((t, i) => (
+              <div
+                key={t.src}
+                ref={(el) => {
+                  tileRefs.current[i] = el;
+                }}
+                className="burst-tile absolute left-1/2 top-1/2"
+                style={{ width: t.w, height: t.h, marginLeft: -t.w / 2, marginTop: -t.h / 2 }}
+              >
+                <TileImg t={t} className="size-full" />
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="container-site relative py-[72px] md:py-[100px]">
+          {!animated && (
+            <div aria-hidden className="burst-static grid grid-cols-4 items-start gap-2 md:gap-4">
+              {mobileTiles
+                .slice(0, 4)
+                .map(
+                  (t, i) =>
+                    t && (
+                      <TileImg
+                        key={t.src}
+                        t={t}
+                        sizes={staticSizes}
+                        className={cn("aspect-[3/5]", i % 2 && "mt-6")}
+                      />
+                    ),
+                )}
             </div>
-          ))}
+          )}
+          <div className={cn(!animated && "py-12")}>{text}</div>
+          {!animated && (
+            <div aria-hidden className="burst-static grid grid-cols-4 items-start gap-2 md:gap-4">
+              {mobileTiles
+                .slice(4)
+                .map(
+                  (t, i) =>
+                    t && (
+                      <TileImg
+                        key={t.src}
+                        t={t}
+                        sizes={staticSizes}
+                        className={cn("aspect-[3/5]", i % 2 === 0 && "mt-6")}
+                      />
+                    ),
+                )}
+            </div>
+          )}
         </div>
-      )}
-      <div className="container-site relative py-[72px] md:py-[100px]">
-        {!animated && (
-          <div aria-hidden className="burst-static grid grid-cols-4 items-start gap-2 md:gap-4">
-            {mobileTiles
-              .slice(0, 4)
-              .map(
-                (t, i) =>
-                  t && (
-                    <TileImg
-                      key={t.src}
-                      t={t}
-                      sizes={staticSizes}
-                      className={cn("aspect-[3/5]", i % 2 && "mt-6")}
-                    />
-                  ),
-              )}
-          </div>
-        )}
-        <div className={cn(!animated && "py-12")}>{text}</div>
-        {!animated && (
-          <div aria-hidden className="burst-static grid grid-cols-4 items-start gap-2 md:gap-4">
-            {mobileTiles
-              .slice(4)
-              .map(
-                (t, i) =>
-                  t && (
-                    <TileImg
-                      key={t.src}
-                      t={t}
-                      sizes={staticSizes}
-                      className={cn("aspect-[3/5]", i % 2 === 0 && "mt-6")}
-                    />
-                  ),
-              )}
-          </div>
-        )}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
 
@@ -419,6 +438,7 @@ export function WorkCarousel() {
   const cursorTarget = useRef({ x: 0, y: 0 });
   const cursorPos = useRef({ x: 0, y: 0 });
   const cursorRafRef = useRef(0);
+  const hasPointerRef = useRef(false);
   const startCursorLoopRef = useRef<() => void>(() => {});
 
   /** Shortest signed distance from the wheel position to card i, so the wheel loops both ways. */
@@ -533,11 +553,16 @@ export function WorkCarousel() {
     };
   }, [stopLoop]);
 
-  // Pointer containment check for floating DRAG badge (syncs with Lenis & scroll)
+  // Pointer containment check for floating DRAG badge (syncs with Lenis & scroll via rAF)
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
-    const checkPointer = () => {
+    let raf = 0;
+    let inView = false;
+
+    const runCheck = () => {
+      raf = 0;
+      if (!inView || !hasPointerRef.current) return;
       const r = el.getBoundingClientRect();
       const { x, y } = cursorTarget.current;
       const inside =
@@ -547,23 +572,43 @@ export function WorkCarousel() {
         x <= r.right &&
         y >= r.top &&
         y <= r.bottom;
-      const hit = inside ? document.elementFromPoint(x, y) : null;
-      setCursorOn(inside && Boolean(hit && el.contains(hit)));
-      setOverButton(Boolean(hit?.closest("a,button")));
+      if (!inside) {
+        setCursorOn(false);
+        setOverButton(false);
+        return;
+      }
+      const hit = document.elementFromPoint(x, y);
+      setCursorOn(Boolean(hit && el.contains(hit)));
+      setOverButton(Boolean(hit?.closest('[data-status="active"] a, button')));
     };
+
+    const scheduleCheck = () => {
+      if (!inView || !hasPointerRef.current || raf) return;
+      raf = requestAnimationFrame(runCheck);
+    };
+
     const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) setCursorOn(false);
-      else checkPointer();
+      inView = Boolean(entry?.isIntersecting);
+      if (!inView) {
+        setCursorOn(false);
+        if (raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      } else {
+        scheduleCheck();
+      }
     });
     observer.observe(el);
-    window.addEventListener("scroll", checkPointer, { passive: true });
-    window.addEventListener("incodet:lenis-scroll", checkPointer);
-    window.addEventListener("resize", checkPointer);
+    window.addEventListener("scroll", scheduleCheck, { passive: true });
+    window.addEventListener("incodet:lenis-scroll", scheduleCheck);
+    window.addEventListener("resize", scheduleCheck);
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", checkPointer);
-      window.removeEventListener("incodet:lenis-scroll", checkPointer);
-      window.removeEventListener("resize", checkPointer);
+      window.removeEventListener("scroll", scheduleCheck);
+      window.removeEventListener("incodet:lenis-scroll", scheduleCheck);
+      window.removeEventListener("resize", scheduleCheck);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -594,10 +639,13 @@ export function WorkCarousel() {
   };
 
   const onPointerMove = (e: RPointerEvent<HTMLDivElement>) => {
+    hasPointerRef.current = true;
     cursorTarget.current = { x: e.clientX, y: e.clientY };
     startCursorLoopRef.current();
-    const hit = document.elementFromPoint(e.clientX, e.clientY);
-    setOverButton(Boolean(hit?.closest('[data-status="active"] a, button')));
+    if (!isDraggingRef.current) {
+      const targetEl = e.target as HTMLElement | null;
+      setOverButton(Boolean(targetEl?.closest('[data-status="active"] a, button')));
+    }
     const d = dragRef.current;
     if (!d) return;
     const dx = e.clientX - d.startX;
@@ -755,10 +803,12 @@ export function WorkCarousel() {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onPointerEnter={(e) => {
+          hasPointerRef.current = true;
           cursorTarget.current = cursorPos.current = { x: e.clientX, y: e.clientY };
           setCursorOn(true);
         }}
         onPointerLeave={() => {
+          hasPointerRef.current = false;
           setCursorOn(false);
           setOverButton(false);
         }}
@@ -930,6 +980,7 @@ export function WorkCarousel() {
         {/* Floating DRAG badge cursor (92px circle + two 12px flanking dots) */}
         {finePointer &&
           cursorOn &&
+          typeof document !== "undefined" &&
           createPortal(
             <div
               ref={cursor}
@@ -1190,7 +1241,7 @@ export function CallingAgent() {
         </div>
       )}
       <div className="flex justify-center pb-[72px] md:pb-[120px]">
-        <PillLink to="/book" variant="primary-inverted" size="lg">
+        <PillLink to="/booking" variant="primary-inverted" size="lg">
           Book a Free Call
         </PillLink>
       </div>

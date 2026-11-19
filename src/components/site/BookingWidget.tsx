@@ -79,6 +79,7 @@ export function BookingWidget({ plan = "", service = "" }: { plan?: string; serv
   const refresh = useCallback(
     async (instant: number) => {
       setLoaded(false);
+      setError("");
       try {
         setTaken(
           await availability({
@@ -344,14 +345,15 @@ export function BookingWidget({ plan = "", service = "" }: { plan?: string; serv
                 })}
               </div>
               {!loaded && (
-                <div className="mt-4 flex items-center gap-3">
-                  <p role="status" className="type-small">
-                    Loading available times…
-                  </p>
-                  {error && (
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  {error ? (
                     <Button variant="outline" onClick={() => void refresh(Date.now())}>
-                      Retry
+                      Retry loading times
                     </Button>
+                  ) : (
+                    <p role="status" className="type-small text-muted-foreground">
+                      Loading available times…
+                    </p>
                   )}
                 </div>
               )}

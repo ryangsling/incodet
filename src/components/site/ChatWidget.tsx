@@ -140,7 +140,7 @@ export function ChatWidget() {
     };
   }, [open]);
 
-  // Close mobile fullscreen sheet cleanly after navigating to /book or another route.
+  // Close mobile fullscreen sheet cleanly after navigating to /booking or another route.
   useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
       setOpen(false);
@@ -238,9 +238,7 @@ export function ChatWidget() {
           {/* Header */}
           <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-5 py-4">
             <div className="flex items-center gap-3">
-              <span className="flex size-9 items-center justify-center rounded-full bg-dark text-on-dark">
-                <Logo variant="mark" tone="white" />
-              </span>
+              <Logo variant="favicon" className="size-9 rounded-[9px]" />
               <div>
                 <h2 id={titleId} className="text-[16px] leading-tight font-medium text-ink">
                   Mary
@@ -286,7 +284,7 @@ export function ChatWidget() {
                   </div>
                   {hasBookCall && (
                     <Link
-                      to="/book"
+                      to="/booking"
                       onClick={() => setOpen(false)}
                       className="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 type-small font-medium text-primary-foreground transition-colors hover:bg-ink/88"
                     >
@@ -316,7 +314,7 @@ export function ChatWidget() {
               >
                 <p>{error}</p>
                 <Link
-                  to="/book"
+                  to="/booking"
                   onClick={() => setOpen(false)}
                   className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 type-small font-medium text-primary-foreground transition-colors hover:bg-ink/88"
                 >
@@ -333,7 +331,7 @@ export function ChatWidget() {
                   team on WhatsApp to keep going.
                 </p>
                 <Link
-                  to="/book"
+                  to="/booking"
                   onClick={() => setOpen(false)}
                   className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 type-small font-medium text-primary-foreground transition-colors hover:bg-ink/88"
                 >

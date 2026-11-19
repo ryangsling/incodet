@@ -23,7 +23,7 @@
 
 - [Home](https://www.incodet.com/): Overview of custom booking websites, 24/7 AI voice calling agents, live launches, and client portal.
 - [Pricing](https://www.incodet.com/pricing): Transparent Starter, Growth, and Scale plans with full feature comparison.
-- [Book a Free Call](https://www.incodet.com/book): Schedule a 30-minute timezone-aware discovery consultation.
+- [Book a Free Call](https://www.incodet.com/booking): Schedule a 30-minute timezone-aware discovery consultation.
 - [Client Portal Demo](https://www.incodet.com/portal/demo): Interactive live demo of the Incodet client portal, milestones, deliverables, and billing.
 - [Case Studies](https://www.incodet.com/case-studies): Full portfolio of shipped client websites, demos, and platforms.
 

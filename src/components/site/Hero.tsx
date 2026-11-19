@@ -1,6 +1,5 @@
-import { ArrowDown, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { site } from "@/config/site";
 import { usePrefersReducedMotion } from "@/hooks/use-motion";
 import { cn } from "@/lib/utils";
 import { Accent } from "./Accent";
@@ -133,18 +132,6 @@ export function Hero() {
     }
   }, [mode]);
 
-  const handleScrollDown = () => {
-    const next = sectionRef.current?.nextElementSibling as HTMLElement | null;
-    if (next) {
-      next.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
-    } else if (sectionRef.current) {
-      window.scrollTo({
-        top: sectionRef.current.offsetHeight,
-        behavior: reduced ? "auto" : "smooth",
-      });
-    }
-  };
-
   return (
     <section
       ref={sectionRef}
@@ -200,9 +187,11 @@ export function Hero() {
       <div className="container-site relative z-10 flex flex-col items-center px-4 pt-16 pb-12 text-center sm:pt-20 sm:pb-16 md:pt-24 md:pb-20">
         <h1
           id="hero-title"
-          className="type-h1 animate-hero-title max-w-[880px] font-medium tracking-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] lg:text-[76px] lg:leading-[1.06] text-balance"
+          className="type-h1 animate-hero-title max-w-[880px] font-medium tracking-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)] lg:text-[76px] lg:leading-[1.06]"
         >
-          Your Business <Accent>Never Sleeps</Accent>
+          Your Business
+          <br />
+          <Accent>Never Sleeps</Accent>
         </h1>
 
         <div className="animate-hero-subtitle mt-5 max-w-[640px] sm:mt-6">
@@ -216,28 +205,6 @@ export function Hero() {
         <div className="animate-hero-edges mt-24 translate-y-3 sm:mt-32 sm:translate-y-4 md:mt-40 md:translate-y-6 lg:mt-48 xl:mt-52">
           <GlassToggle mode={mode} onToggle={toggleMode} />
         </div>
-      </div>
-
-      {/* Minimal edge framing: Year, Down Arrow, Location */}
-      <div className="animate-hero-edges absolute inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-20 flex items-center justify-between px-6 sm:px-10 md:bottom-8 lg:px-14 text-white/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">
-        <span className="type-small font-medium tracking-widest uppercase tabular-nums">2026</span>
-
-        <button
-          type="button"
-          onClick={handleScrollDown}
-          aria-label="Scroll down to explore"
-          className="group flex flex-col items-center gap-1 rounded-full p-2 text-white/90 hover:text-white transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        >
-          <ArrowDown
-            aria-hidden
-            className="size-4 transition-transform duration-300 group-hover:translate-y-1"
-            strokeWidth={1.75}
-          />
-        </button>
-
-        <span className="max-w-[130px] truncate text-right text-xs font-medium tracking-wide sm:max-w-none sm:text-sm">
-          {site.locationLabel}
-        </span>
       </div>
     </section>
   );

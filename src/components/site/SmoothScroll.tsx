@@ -14,41 +14,53 @@ export function SmoothScroll() {
     let cancelled = false;
     const setup = async () => {
       if (!enabled.matches || navigator.maxTouchPoints > 0) return;
-      const [{ default: Lenis }, { gsap, ScrollTrigger }] = await Promise.all([
-        import("lenis"),
-        loadScrollMotion(),
-      ]);
-      if (cancelled || !enabled.matches) return;
-      const lenis = new Lenis({
-        duration: 1.05,
-        anchors: true,
-        syncTouch: false,
-        prevent: (node) => Boolean(node.closest('[role="dialog"], [data-lenis-prevent]')),
-      });
-      const tick = (time: number) => lenis.raf(time * 1000);
-      lenis.on("scroll", () => {
-        ScrollTrigger.update();
-        window.dispatchEvent(new Event("incodet:lenis-scroll"));
-      });
-      // One animation loop: Lenis runs on GSAP's ticker. No lag smoothing, so scroll-linked
-      // animations never jump to catch up after a slow frame.
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
-      const lock = () => {
-        if (document.body.style.overflow === "hidden") lenis.stop();
-        else lenis.start();
-      };
-      const observer = new MutationObserver(lock);
-      observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-      lock();
-      document.documentElement.dataset["smoothScroll"] = "enabled";
-      dispose = () => {
-        observer.disconnect();
-        gsap.ticker.remove(tick);
-        gsap.ticker.lagSmoothing(500, 33);
-        lenis.destroy();
-        delete document.documentElement.dataset["smoothScroll"];
-      };
+      try {
+        const [{ default: Lenis }, { gsap, ScrollTrigger }] = await Promise.all([
+          import("lenis"),
+          loadScrollMotion(),
+        ]);
+        if (cancelled || !enabled.matches) return;
+        const lenis = new Lenis({
+          duration: 1.05,
+          anchors: true,
+          syncTouch: false,
+          prevent: (node) => Boolean(node.closest('[role="dialog"], [data-lenis-prevent]')),
+        });
+        const tick = (time: number) => lenis.raf(time * 1000);
+        lenis.on("scroll", () => {
+          try {
+            ScrollTrigger.update();
+          } catch {
+            // Ignore ScrollTrigger update errors during route transitions
+          }
+          window.dispatchEvent(new Event("incodet:lenis-scroll"));
+        });
+        // One animation loop: Lenis runs on GSAP's ticker. No lag smoothing, so scroll-linked
+        // animations never jump to catch up after a slow frame.
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+        const lock = () => {
+          if (document.body.style.overflow === "hidden") lenis.stop();
+          else lenis.start();
+        };
+        const observer = new MutationObserver(lock);
+        observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+        lock();
+        document.documentElement.dataset["smoothScroll"] = "enabled";
+        dispose = () => {
+          observer.disconnect();
+          gsap.ticker.remove(tick);
+          gsap.ticker.lagSmoothing(500, 33);
+          try {
+            lenis.destroy();
+          } catch {
+            // Ignore Lenis destroy race
+          }
+          delete document.documentElement.dataset["smoothScroll"];
+        };
+      } catch {
+        // Fallback silently to native scrolling if smooth scroll initialization fails
+      }
     };
     const change = () => {
       cancelled = true;
@@ -68,12 +80,29 @@ export function SmoothScroll() {
 
   // Re-sync ScrollTrigger measurements after SPA route changes without recreating Lenis.
   useEffect(() => {
+    let active = true;
     const id = window.requestAnimationFrame(() => {
-      void loadScrollMotion().then(({ ScrollTrigger }) => {
-        ScrollTrigger.refresh();
-      });
+      void loadScrollMotion()
+        .then(({ ScrollTrigger }) => {
+          if (!active) return;
+          try {
+            ScrollTrigger.getAll().forEach((trigger) => {
+              const target = trigger.trigger;
+              if (target instanceof Node && !target.isConnected) {
+                trigger.kill();
+              }
+            });
+            ScrollTrigger.refresh();
+          } catch {
+            // Ignore ScrollTrigger refresh race during route transitions
+          }
+        })
+        .catch(() => {});
     });
-    return () => window.cancelAnimationFrame(id);
+    return () => {
+      active = false;
+      window.cancelAnimationFrame(id);
+    };
   }, [pathname]);
 
   return null;

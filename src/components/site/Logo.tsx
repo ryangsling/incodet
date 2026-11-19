@@ -3,38 +3,85 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   tone?: "ink" | "white";
-  /** "mark" shows only the monogram (used in the floating nav). */
-  variant?: "full" | "mark";
+  /** "mark" or "favicon" shows the rounded favicon emblem (home pill bar, assistant, etc.). */
+  variant?: "full" | "mark" | "favicon";
+  /** Uses the animated wordmark SVG with prefers-reduced-motion static fallback. */
+  animated?: boolean;
+  size?: "sm" | "md" | "lg";
   className?: string;
 };
 
-export function Logo({ tone = "ink", variant = "full", className }: Props) {
-  const color = tone === "white" ? "text-on-dark" : "text-ink";
+const fullSizeCls = {
+  sm: "h-6 w-auto",
+  md: "h-8 w-auto",
+  lg: "h-9 w-auto md:h-11",
+} as const;
+
+export function Logo({
+  tone = "ink",
+  variant = "full",
+  animated = false,
+  size = "md",
+  className,
+}: Props) {
   if (site.logoUrl) {
     return (
       <img
         src={site.logoUrl}
         alt={site.name}
-        className={cn(variant === "mark" ? "h-6 w-auto" : "h-7 w-auto", className)}
+        className={cn(variant === "full" ? fullSizeCls[size] : "size-6 w-auto", className)}
       />
     );
   }
-  if (variant === "mark") {
+
+  if (variant === "mark" || variant === "favicon") {
     return (
-      <span
-        role="img"
-        aria-label={site.name}
+      <img
+        src="/brand/favicon.svg"
+        alt={site.name}
+        width={24}
+        height={24}
+        decoding="async"
         className={cn(
-          "wordmark flex size-6 items-center justify-center rounded-[6px] text-[15px] leading-none font-bold",
-          tone === "white" ? "bg-background text-ink" : "bg-ink text-primary-foreground",
+          "block size-6 shrink-0 rounded-[6px]",
+          tone === "white" && "ring-1 ring-white/15",
           className,
         )}
-      >
-        {site.name.charAt(0)}
-      </span>
+      />
     );
   }
+
+  const staticSrc =
+    tone === "white" ? "/brand/incodet-wordmark-white.svg" : "/brand/incodet-wordmark.svg";
+  const animatedSrc =
+    tone === "white"
+      ? "/brand/incodet-wordmark-animated-white.svg"
+      : "/brand/incodet-wordmark-animated.svg";
+
+  if (animated) {
+    return (
+      <picture className="inline-flex shrink-0 items-center">
+        <source srcSet={staticSrc} media="(prefers-reduced-motion: reduce)" />
+        <img
+          src={animatedSrc}
+          alt="incodet"
+          width={2044}
+          height={600}
+          decoding="async"
+          className={cn("block", fullSizeCls[size === "md" ? "lg" : size], className)}
+        />
+      </picture>
+    );
+  }
+
   return (
-    <span className={cn("wordmark text-2xl leading-none", color, className)}>{site.name}</span>
+    <img
+      src={staticSrc}
+      alt="incodet"
+      width={2044}
+      height={600}
+      decoding="async"
+      className={cn("block", fullSizeCls[size], className)}
+    />
   );
 }

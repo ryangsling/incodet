@@ -1,52 +1,68 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { AppWindow, Diamond, Globe, Layers } from "lucide-react";
 import { featuredCaseStudies, mockupSm } from "@/content/caseStudies";
 import { PillLink } from "./Button";
 import { loadScrollMotion } from "@/lib/scroll-motion";
 import { PIN_QUERY } from "@/hooks/use-motion";
 
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function FeaturedStudies() {
   const root = useRef<HTMLElement>(null);
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     let cancelled = false;
     let revert: (() => void) | undefined;
-    void loadScrollMotion().then(({ gsap, ScrollTrigger }) => {
-      if (cancelled || !root.current) return;
-      const mm = gsap.matchMedia();
-      mm.add(`${PIN_QUERY} and (prefers-reduced-motion: no-preference)`, () => {
-        const el = root.current;
-        if (!el) return;
-        const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-featured-card]"));
-        cards.forEach((card, i) => {
-          const next = cards[i + 1];
-          if (!next) return;
-          gsap.fromTo(
-            card,
-            { scale: 1, filter: "brightness(1)" },
-            {
-              scale: 0.95,
-              filter: "brightness(0.9)",
-              ease: "none",
-              scrollTrigger: {
-                id: `featured-${i}`,
-                trigger: next,
-                start: "top 65%",
-                end: "top 96px",
-                scrub: true,
-                refreshPriority: 20,
-                invalidateOnRefresh: true,
+    void loadScrollMotion()
+      .then(({ gsap, ScrollTrigger }) => {
+        if (cancelled || !root.current) return;
+        const mm = gsap.matchMedia();
+        mm.add(`${PIN_QUERY} and (prefers-reduced-motion: no-preference)`, () => {
+          const el = root.current;
+          if (!el) return;
+          const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-featured-card]"));
+          cards.forEach((card, i) => {
+            const next = cards[i + 1];
+            if (!next) return;
+            gsap.fromTo(
+              card,
+              { scale: 1, filter: "brightness(1)" },
+              {
+                scale: 0.95,
+                filter: "brightness(0.9)",
+                ease: "none",
+                scrollTrigger: {
+                  id: `featured-${i}`,
+                  trigger: next,
+                  start: "top 65%",
+                  end: "top 96px",
+                  scrub: true,
+                  refreshPriority: 20,
+                  invalidateOnRefresh: true,
+                },
               },
-            },
-          );
+            );
+          });
+          try {
+            ScrollTrigger.sort();
+            ScrollTrigger.refresh();
+          } catch {
+            // Ignore layout refresh errors during unmount
+          }
         });
-        ScrollTrigger.sort();
-        ScrollTrigger.refresh();
-      });
-      revert = () => {
-        mm.revert();
-        featuredCaseStudies.forEach((_, i) => ScrollTrigger.getById(`featured-${i}`)?.kill());
-      };
-    });
+        revert = () => {
+          try {
+            mm.revert();
+          } catch {
+            // Ignore GSAP revert race
+          }
+          try {
+            featuredCaseStudies.forEach((_, i) => ScrollTrigger.getById(`featured-${i}`)?.kill());
+          } catch {
+            // Ignore ScrollTrigger cleanup race
+          }
+        };
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
       revert?.();

@@ -14,9 +14,9 @@ export function TopBar() {
     >
       <div className="container-site flex h-20 items-center justify-between md:h-24">
         <Link to="/" aria-label="Incodet home" className="inline-flex items-center rounded-md">
-          <Logo tone={isHome ? "white" : "ink"} />
+          <Logo tone={isHome ? "white" : "ink"} animated className="h-9 w-auto md:h-11" />
         </Link>
-        <PillLink to="/book" size="sm" variant={isHome ? "primary-inverted" : "primary"}>
+        <PillLink to="/booking" size="sm" variant={isHome ? "primary-inverted" : "primary"}>
           Book a Free Call
         </PillLink>
       </div>

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { booking, budgets, deliveryTimes, projectTypes, quickPickZones } from "@/config/booking";
 import {
+  bookingFields,
+  bookingPayload,
   bookingPreselection,
   canonicalZone,
   dateKey,
@@ -9,6 +11,7 @@ import {
   bookingIcs,
   timeGroup,
   validSlot,
+  validTimezone,
   zoneCity,
   zoneLabel,
 } from "@/lib/booking";
@@ -148,5 +151,64 @@ describe("detected time zone aliases", () => {
     expect(canonicalZone("Asia/Calcutta")).toBe("Asia/Kolkata");
     expect(canonicalZone("US/Pacific")).toBe("America/Los_Angeles");
     expect(canonicalZone("Africa/Lagos")).toBe("Africa/Lagos");
+  });
+});
+
+describe("booking form payload and multi-region zones", () => {
+  const targetZones = [
+    "Europe/London",
+    "America/New_York",
+    "America/Los_Angeles",
+    "America/Toronto",
+    "Australia/Perth",
+    "Australia/Sydney",
+  ];
+
+  it("accepts valid timezones for UK, US, Canada, and Australia and rejects invalid ones", () => {
+    for (const z of targetZones) {
+      expect(validTimezone(z)).toBe(true);
+    }
+    expect(validTimezone("Mars/Olympus_Mons")).toBe(false);
+  });
+
+  it("validates complete booking payloads and rejects invalid emails or short messages", () => {
+    const validInput = {
+      full_name: "Alex Morgan",
+      company_name: "Northside Roofing",
+      company_email: "alex@northsideroofing.co.uk",
+      phone: "+44 7700 900123",
+      project_type: "Website + AI agent",
+      budget: "$1,000 to $3,500",
+      delivery_time: "2 to 4 weeks",
+      message: "Looking for a booking website and 24/7 AI phone receptionist.",
+      slot_start: "2026-11-08T16:00:00.000Z",
+      visitor_timezone: "Europe/London",
+      website: "",
+      rendered_at: now,
+    };
+
+    expect(bookingFields.safeParse(validInput).success).toBe(true);
+    expect(bookingPayload.safeParse(validInput).success).toBe(true);
+
+    expect(
+      bookingPayload.safeParse({
+        ...validInput,
+        company_email: "not-an-email",
+      }).success,
+    ).toBe(false);
+
+    expect(
+      bookingPayload.safeParse({
+        ...validInput,
+        message: "too short",
+      }).success,
+    ).toBe(false);
+
+    expect(
+      bookingPayload.safeParse({
+        ...validInput,
+        visitor_timezone: "Invalid/Zone",
+      }).success,
+    ).toBe(false);
   });
 });

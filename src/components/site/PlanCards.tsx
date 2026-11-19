@@ -74,7 +74,7 @@ export function PlanCards() {
                 {p.timeline}
               </p>
               <PillLink
-                to="/book"
+                to="/booking"
                 search={{ plan: p.id }}
                 variant={f ? "primary-inverted" : "primary"}
                 className="mt-5 w-full"

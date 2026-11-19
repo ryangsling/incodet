@@ -159,7 +159,7 @@ export function ServicePage({ service: s }: { service: Service }) {
             </h1>
             <p className="mt-6 max-w-xl type-body">{s.answerFirst}</p>
             <div className="mt-8 flex flex-wrap items-center gap-6">
-              <PillLink to="/book" search={{ service: s.id }}>
+              <PillLink to="/booking" search={{ service: s.id }}>
                 Book a Call
               </PillLink>
               <Link

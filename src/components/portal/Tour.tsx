@@ -74,12 +74,21 @@ export function Tour({
     el?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
     measure();
     const t = window.setTimeout(measure, reduce ? 0 : 450);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, { passive: true });
+    let raf = 0;
+    const onMeasure = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        measure();
+      });
+    };
+    window.addEventListener("resize", onMeasure);
+    window.addEventListener("scroll", onMeasure, { passive: true });
     return () => {
       window.clearTimeout(t);
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure);
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onMeasure);
+      window.removeEventListener("scroll", onMeasure);
     };
   }, [open, step, measure]);
 

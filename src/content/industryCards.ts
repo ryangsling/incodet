@@ -59,7 +59,7 @@ export const industryCards: IndustryCardItem[] = [
     benefit: "Tell us what you need and we will build it",
     imageId: "industry-custom",
     icon: Plus,
-    href: "#booking",
+    href: "/booking",
     isCustomAction: true,
     actionLabel: "Book a Free Call",
   },

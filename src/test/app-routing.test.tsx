@@ -4,6 +4,9 @@ import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
 import { services } from "@/content/services";
+import { industries } from "@/content/industries";
+import { caseStudies } from "@/content/caseStudies";
+import { pageLinks } from "@/config/site";
 import { sitemapStaticPaths } from "@/lib/sitemap";
 
 // Match routes without running loaders or rendering: loaders may need a server or
@@ -19,11 +22,31 @@ describe("App routing", () => {
       expect(sitemap).toContain(path);
     }
   });
-  it("matches a page for / instead of falling back to not found", () => {
+
+  it("matches all core, booking, industry, and case study routes cleanly without 404 fallback", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const sitemap = sitemapStaticPaths(router).map((path) => path.replace(/\/$/, ""));
 
-    const matches = router.matchRoutes("/");
+    expect(sitemap).toContain("/booking");
+    expect(sitemap).not.toContain("/book");
+    expect(pageLinks.some((l) => l.to === "/booking")).toBe(true);
 
-    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+    const targets = [
+      "/",
+      "/booking",
+      "/book",
+      "/pricing",
+      "/custom-software",
+      "/case-studies",
+      "/industries",
+      ...industries.map((i) => i.to),
+      ...caseStudies.map((c) => `/case-studies/${c.slug}`),
+    ];
+
+    for (const path of targets) {
+      const match = router.matchRoutes(path).at(-1);
+      expect(match?.routeId, `Route ${path} matched root 404`).not.toBe(rootRouteId);
+      expect(match, `Route ${path} did not match`).toBeDefined();
+    }
   });
 });

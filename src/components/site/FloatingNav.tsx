@@ -80,7 +80,7 @@ export function FloatingNav() {
           )}
         >
           <Link to="/" aria-label="Incodet home" className="inline-flex items-center rounded-md">
-            <Logo variant="mark" tone={inverted ? "ink" : "white"} />
+            <Logo variant="favicon" tone={inverted ? "ink" : "white"} />
           </Link>
           <span
             className="text-[13px] font-medium tabular-nums"
@@ -119,7 +119,7 @@ const menuLinks = [
   { to: "/custom-software", label: "Custom Software" },
   { to: "/case-studies", label: "Case Studies" },
   { to: "/portal", label: "Client Portal" },
-  { to: "/book", label: "Book a Call" },
+  { to: "/booking", label: "Book a Call" },
 ];
 const label = "text-[13px] font-medium tracking-[0.08em] text-muted-foreground uppercase";
 const stagger = (i: number) => ({ animationDelay: `${60 + i * 30}ms` });
@@ -177,7 +177,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
             aria-label="Incodet home"
             className="inline-flex items-center rounded-md"
           >
-            <Logo />
+            <Logo className="h-8 w-auto" />
           </Link>
           <button
             onClick={onClose}
@@ -250,9 +250,6 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
             </ul>
           </nav>
           <div className="flex flex-col gap-5 md:border-l md:border-border md:pl-10">
-            <div className="menu-item hidden md:block" style={stagger(n++)}>
-              <Logo />
-            </div>
             <dl className="flex flex-col gap-4">
               <div className="menu-item" style={stagger(n++)}>
                 <dt className={label}>Email us</dt>
@@ -300,7 +297,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
               Company Deck
             </Link>
             <div className="menu-item" style={stagger(n++)}>
-              <PillLink to="/book" onClick={onClose}>
+              <PillLink to="/booking" onClick={onClose}>
                 Book a Free Call
               </PillLink>
             </div>

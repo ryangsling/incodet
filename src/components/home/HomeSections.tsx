@@ -10,9 +10,10 @@ import {
 import type { ReactNode } from "react";
 import { site } from "@/config/site";
 import { faq } from "@/content/faq";
+import { testimonials } from "@/content/testimonials";
 import { plansNote } from "@/content/plans";
 import { PlanCards } from "@/components/site/PlanCards";
-import { ReviewsCarousel } from "./ReviewsCarousel";
+import { HighlightTestimonialSection } from "./HighlightTestimonialSection";
 import { ServicePanels } from "@/components/site/ServicePanels";
 import { PillLink, pillButton } from "@/components/site/Button";
 import { Accordion, SegmentedTabs } from "@/components/site/Interactive";
@@ -164,7 +165,7 @@ export function Process({
                     <h3 className="mt-6 type-h3">{s.title}</h3>
                     <p className="mt-3 type-body">{s.body}</p>
                     <div className="mt-8">
-                      <PillLink to="/book">Book a Free Call</PillLink>
+                      <PillLink to="/booking">Book a Free Call</PillLink>
                     </div>
                   </div>
                   <div className="rounded-card-sm bg-bg-soft p-6 md:p-10">
@@ -227,7 +228,9 @@ export function Reviews() {
           Incodet.
         </p>
       </div>
-      <ReviewsCarousel />
+      <div className="mx-auto max-w-3xl">
+        <HighlightTestimonialSection testimonials={testimonials} interval={5500} />
+      </div>
     </Section>
   );
 }
@@ -244,12 +247,12 @@ export function Faq() {
             Can't find what you need? Book a free call or message us on WhatsApp.
           </p>
           <div className="rounded-card border border-border bg-background p-6 md:p-8">
-            <div className="flex items-center gap-3">
-              <Logo variant="mark" />
+            <div className="flex flex-wrap items-center gap-3">
+              <Logo tone="ink" size="sm" />
               <p className="text-[18px] font-medium text-ink">Book a free call</p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <PillLink to="/book">Book a Free Call</PillLink>
+              <PillLink to="/booking">Book a Free Call</PillLink>
               <ExternalPill href={site.whatsapp} variant="secondary">
                 <MessageCircle aria-hidden className="size-4" /> WhatsApp
               </ExternalPill>
@@ -283,7 +286,7 @@ export function BookingCta({ service }: { service?: string } = {}) {
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <PillLink
-                to="/book"
+                to="/booking"
                 search={service ? { service } : {}}
                 variant="primary-inverted"
                 size="lg"

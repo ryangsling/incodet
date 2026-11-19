@@ -35,7 +35,7 @@ function NotFoundComponent() {
           <PillLink to="/pricing" variant="secondary">
             Pricing
           </PillLink>
-          <PillLink to="/book" variant="secondary">
+          <PillLink to="/booking" variant="secondary">
             Book a Call
           </PillLink>
         </div>
@@ -45,7 +45,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
-  console.error(error);
+  console.error("[Incodet Route Error]", error);
   const router = useRouter();
 
   return (
@@ -59,9 +59,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
+            type="button"
             onClick={() => {
-              router.invalidate();
               reset();
+              void router.invalidate();
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
@@ -69,6 +70,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           </button>
           <Link
             to="/"
+            onClick={() => reset()}
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Go home
@@ -92,14 +94,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-        { name: "theme-color", content: "#0A0A0A" },
+        { name: "theme-color", content: "#111111" },
         ...(isNotFound
           ? [{ title: "Page not found | Incodet" }, { name: "robots", content: "noindex" }]
-          : [{ title: "Incodet | Websites, AI Agents & Custom Software" }]),
+          : [{ title: "Incodet | Your Business Never Sleeps" }]),
         {
           name: "description",
           content:
-            "Booking websites, 24/7 AI chatbots and calling agents, and custom software for small, growing and established businesses. Pay only for what you use.",
+            "AI agents that answer calls, book appointments and reply to customers, plus custom software built for your business.",
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -109,18 +111,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           rel: "stylesheet",
           href: appCss,
         },
-        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-        { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+        { rel: "icon", href: "/brand/favicon.svg", type: "image/svg+xml" },
+        { rel: "icon", href: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+        { rel: "apple-touch-icon", href: "/brand/apple-touch-icon.png" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {
           rel: "preload",
           as: "style",
-          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&family=Inter:wght@600&display=swap",
         },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&family=Inter:wght@600&display=swap",
         },
       ],
     };
@@ -135,6 +138,12 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `try{if(location.pathname!=='/deck'&&!sessionStorage.getItem('incodet_intro_seen')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro-pending');}catch(e){}`,
+          }}
+        />
         <HeadContent />
         <script
           suppressHydrationWarning
@@ -160,12 +169,23 @@ function RootComponent() {
   const isDeck = pathname === "/deck";
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
-    });
-    return () => data.subscription.unsubscribe();
+    if (isDeck) {
+      document.documentElement.classList.remove("intro-pending");
+    }
+  }, [isDeck]);
+
+  useEffect(() => {
+    try {
+      const { data } = supabase.auth.onAuthStateChange((event) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+        void router.invalidate();
+        if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+      });
+      return () => data?.subscription?.unsubscribe();
+    } catch (err) {
+      console.error("[RootComponent] Auth listener failed:", err);
+      return undefined;
+    }
   }, [router, queryClient]);
 
   return (

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/site/Logo";
 import { site } from "@/config/site";
 import { createDeckSlides } from "./DeckSlides";
 import { DECK_STACKED_QUERY, deckIndexFromHash, stackedDeckIndex } from "@/lib/deck-navigation";
@@ -128,7 +129,7 @@ export function CompanyDeck() {
     <div className="company-deck" data-theme={slides[current]?.dark ? "dark" : "light"}>
       <header className="deck-chrome">
         <Link to="/" className="deck-wordmark" aria-label={`${site.name} home`}>
-          {site.name}
+          <Logo tone={slides[current]?.dark ? "white" : "ink"} className="h-8 w-auto" />
         </Link>
         <div>
           <Button variant="ghost" className="deck-print" onClick={print}>

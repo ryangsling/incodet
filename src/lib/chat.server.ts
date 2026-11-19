@@ -1,4 +1,4 @@
-import { GoogleGenAI, type Content } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, type Content } from "@google/genai";
 import { site } from "@/config/site";
 import {
   CHAT_FALLBACK_MODEL,
@@ -48,7 +48,7 @@ Past work (public projects only):
 - Summit Ridge Roofing (Demo): Dallas roofing website demo with a one-minute address estimate form, price guide, and 24/7 AI receptionist.
 Support after launch: End-to-end testing, go-live, and ongoing support and improvements (Starter has optional $19/month hosting and updates care). Clients own their website and content once paid.
 Payment methods: Payoneer, Wise, PayPal, and bank transfer.
-Contact: Email ${site.email}, WhatsApp ${site.whatsapp} (${site.phoneDisplay}), phone ${site.phoneDisplay}, free 30-minute call booking calendar at /book. If asked to talk to a human, offer [BOOK_CALL] as well as email (${site.email}) and WhatsApp.`;
+Contact: Email ${site.email}, WhatsApp ${site.whatsapp} (${site.phoneDisplay}), phone ${site.phoneDisplay}, free 30-minute call booking calendar at /booking. If asked to talk to a human, offer [BOOK_CALL] as well as email (${site.email}) and WhatsApp.`;
 
 const ipLimiter = new SlidingWindowLimiter(MAX_IP_MESSAGES_PER_HOUR, HOUR_MS);
 const sessionLimiter = new SlidingWindowLimiter(MAX_SESSION_MESSAGES, 24 * HOUR_MS);
@@ -152,13 +152,16 @@ export async function handleChatRequest(request: Request): Promise<Response> {
         contents,
         config: {
           systemInstruction: INCODET_SYSTEM_PROMPT,
+          thinkingConfig: {
+            thinkingLevel: model === CHAT_MODEL ? ThinkingLevel.LOW : ThinkingLevel.MINIMAL,
+          },
         },
       });
     };
 
     let response;
     try {
-      response = await generate(CHAT_MODEL, 12_000);
+      response = await generate(CHAT_MODEL, 15_000);
     } catch (primaryErr) {
       const primaryStatus =
         typeof primaryErr === "object" && primaryErr !== null && "status" in primaryErr

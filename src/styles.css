@@ -185,6 +185,13 @@
   html {
     -webkit-text-size-adjust: 100%;
   }
+  html.intro-pending body {
+    background: #111111;
+  }
+  html.intro-pending #root,
+  html.intro-pending body > :not([data-intro-preloader]) {
+    visibility: hidden;
+  }
   body {
     background-color: var(--bg);
     color: var(--body);
@@ -284,10 +291,6 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-@utility wordmark {
-  font-weight: 600;
-  letter-spacing: -0.02em;
 }
 
 /* Fade-up reveal */
@@ -1166,8 +1169,6 @@ html.lenis body {
 .deck-wordmark {
   display: inline-flex;
   align-items: center;
-  font-size: 22px;
-  font-weight: 600;
 }
 .deck-stage {
   position: fixed;
@@ -2174,4 +2175,54 @@ html.lenis body {
   .deck-title-xl {
     font-size: 36px;
   }
+}
+
+@keyframes intro-mark-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes intro-letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-curtain-up {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.intro-preloader-overlay {
+  --intro-mark-h: 64px;
+  animation: intro-curtain-up 0.45s cubic-bezier(0.645, 0.045, 0.355, 1) 0.95s both;
+}
+
+@media (min-width: 768px) {
+  .intro-preloader-overlay {
+    --intro-mark-h: 88px;
+  }
+}
+
+.intro-preloader-mark {
+  animation: intro-mark-in 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both;
+}
+
+.intro-preloader-letter {
+  animation: intro-letter-in 0.34s cubic-bezier(0.215, 0.61, 0.355, 1) both;
 }

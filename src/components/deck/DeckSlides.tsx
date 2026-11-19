@@ -12,6 +12,7 @@ import { deckPrimaryWork, deckMoreWork, deckProblems, deckStarter } from "@/cont
 import { CallCardUI, ChatUI } from "@/components/home/MiniUI";
 import { industryIcon } from "@/components/site/industryIcons";
 import { TeamFlag } from "@/components/site/TeamFlag";
+import { Logo } from "@/components/site/Logo";
 import { Button } from "@/components/ui/button";
 
 export type DeckSlide = { id: string; title: string; dark: boolean; content: ReactNode };
@@ -39,7 +40,7 @@ function PortalPreview() {
   return (
     <div className="deck-portal" aria-label="Illustrative client portal preview">
       <div className="deck-portal-header">
-        <span>{site.name}</span>
+        <Logo tone="ink" size="sm" />
         <Tag>Client portal preview</Tag>
       </div>
       <h3>Your project</h3>
@@ -318,7 +319,18 @@ export function createDeckSlides(): DeckSlide[] {
                   </li>
                 ))}
               </ul>
-              <p className="deck-url">{project.liveUrl}</p>
+              {project.liveUrl && (
+                <p className="deck-url">
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {project.liveUrl}
+                  </a>
+                </p>
+              )}
             </div>
           </div>
         </>
@@ -548,7 +560,7 @@ export function createDeckSlides(): DeckSlide[] {
             ))}
           </div>
           <Button asChild className="deck-cta">
-            <Link to="/book">
+            <Link to="/booking">
               Book a Free Call <ArrowUpRight aria-hidden />
             </Link>
           </Button>

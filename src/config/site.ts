@@ -71,7 +71,7 @@ export const pageLinks = [
   { to: "/pricing", label: "Pricing" },
   { to: "/custom-software", label: "Custom Software" },
   { to: "/case-studies", label: "Case Studies" },
-  { to: "/book", label: "Book a Call" },
+  { to: "/booking", label: "Book a Call" },
   { to: "/portal", label: "Client Portal" },
 ] as const;
 

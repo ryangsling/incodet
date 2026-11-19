@@ -164,7 +164,7 @@ function PricingPage() {
             <Reveal as="li" key={s} delay={i * 80}>
               <Card size="sm" className="flex h-full flex-col items-start justify-between gap-6">
                 <h3 className="type-h3">{s}</h3>
-                <PillLink to="/book" variant="secondary" size="sm">
+                <PillLink to="/booking" variant="secondary" size="sm">
                   Ask for a quote
                 </PillLink>
               </Card>

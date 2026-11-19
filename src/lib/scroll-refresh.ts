@@ -24,7 +24,11 @@ export function watchScrollLayout(ScrollTrigger: typeof ScrollTriggerType): () =
     window.clearTimeout(timer);
     timer = window.setTimeout(() => {
       if (!force && root.scrollHeight === lastHeight) return;
-      ScrollTrigger.refresh();
+      try {
+        ScrollTrigger.refresh();
+      } catch {
+        // Ignore ScrollTrigger refresh errors during route transitions
+      }
       lastHeight = root.scrollHeight;
     }, 150);
   };

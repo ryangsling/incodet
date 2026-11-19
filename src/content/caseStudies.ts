@@ -432,8 +432,7 @@ const all: CaseStudy[] = [
       "Consolidated two disconnected real-estate media vendors into one white-label platform",
       "Built-in lead capture synced across interactive 360° tours and SVG floorplans",
     ],
-    liveUrl: "https://virtual-tour-poc.vercel.app/tour/50ad98c9",
-    liveLabel: "View Live Demo",
+    liveUrl: "https://brhexstudio.com/",
     imageAlt: "360° tour viewer in the BRHEX Studio platform",
   }),
   make({

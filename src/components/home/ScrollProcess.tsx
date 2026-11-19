@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { deliverySteps } from "@/content/process";
 import { loadScrollMotion } from "@/lib/scroll-motion";
 import { cn } from "@/lib/utils";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 function StepIcon({ index }: { index: number }) {
   switch (index) {
@@ -121,75 +123,90 @@ export function ScrollProcess() {
   const lineRef = useRef<HTMLDivElement>(null);
   const [activeUpTo, setActiveUpTo] = useState(0);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     let cancelled = false;
     let revert: (() => void) | undefined;
 
-    void loadScrollMotion().then(({ gsap, ScrollTrigger }) => {
-      if (cancelled || !root.current || !mainRef.current || !lineRef.current) return;
+    void loadScrollMotion()
+      .then(({ gsap, ScrollTrigger }) => {
+        if (cancelled || !root.current || !mainRef.current || !lineRef.current) return;
 
-      const ctx = gsap.context(() => {
-        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const mainEl = mainRef.current;
-        const lineEl = lineRef.current;
-        if (!mainEl || !lineEl) return;
+        const ctx = gsap.context(() => {
+          const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const mainEl = mainRef.current;
+          const lineEl = lineRef.current;
+          if (!mainEl || !lineEl) return;
 
-        const items = Array.from(mainEl.querySelectorAll<HTMLElement>("[data-process-row]"));
+          const items = Array.from(mainEl.querySelectorAll<HTMLElement>("[data-process-row]"));
 
-        const getThresholds = () => {
-          const totalH = mainEl.offsetHeight || 1;
-          return items.map((item) => (item.offsetTop + item.offsetHeight / 2) / totalH);
-        };
+          const getThresholds = () => {
+            const totalH = mainEl.offsetHeight || 1;
+            return items.map((item) => (item.offsetTop + item.offsetHeight / 2) / totalH);
+          };
 
-        if (reduced) {
-          setActiveUpTo(items.length - 1);
-          gsap.set(lineEl, { clipPath: "inset(0% 0% 0% 0%)" });
-          return;
-        }
-
-        const initialThresholds = getThresholds();
-        const startRatio = initialThresholds[0] ?? 0.1;
-        const endRatio = initialThresholds[initialThresholds.length - 1] ?? 0.9;
-
-        const updateForProgress = (progress: number) => {
-          const thresholds = getThresholds();
-          const minR = thresholds[0] ?? startRatio;
-          const maxR = thresholds[thresholds.length - 1] ?? endRatio;
-          const currentRatio = minR + progress * (maxR - minR);
-
-          const bottomInset = Math.max(0, Math.min(100, (1 - currentRatio) * 100));
-          gsap.set(lineEl, { clipPath: `inset(0% 0% ${bottomInset.toFixed(2)}% 0%)` });
-
-          let nextActive = 0;
-          for (let i = 0; i < thresholds.length; i += 1) {
-            if (currentRatio >= (thresholds[i] ?? 0) - 0.025) {
-              nextActive = i;
-            }
+          if (reduced) {
+            setActiveUpTo(items.length - 1);
+            gsap.set(lineEl, { clipPath: "inset(0% 0% 0% 0%)" });
+            return;
           }
-          setActiveUpTo((prev) => (prev === nextActive ? prev : nextActive));
+
+          const initialThresholds = getThresholds();
+          const startRatio = initialThresholds[0] ?? 0.1;
+          const endRatio = initialThresholds[initialThresholds.length - 1] ?? 0.9;
+
+          const updateForProgress = (progress: number) => {
+            if (cancelled) return;
+            const thresholds = getThresholds();
+            const minR = thresholds[0] ?? startRatio;
+            const maxR = thresholds[thresholds.length - 1] ?? endRatio;
+            const currentRatio = minR + progress * (maxR - minR);
+
+            const bottomInset = Math.max(0, Math.min(100, (1 - currentRatio) * 100));
+            gsap.set(lineEl, { clipPath: `inset(0% 0% ${bottomInset.toFixed(2)}% 0%)` });
+
+            let nextActive = 0;
+            for (let i = 0; i < thresholds.length; i += 1) {
+              if (currentRatio >= (thresholds[i] ?? 0) - 0.025) {
+                nextActive = i;
+              }
+            }
+            setActiveUpTo((prev) => (prev === nextActive ? prev : nextActive));
+          };
+
+          updateForProgress(0);
+
+          ScrollTrigger.create({
+            id: "process-steps",
+            trigger: mainEl,
+            start: "top 68%",
+            end: "bottom 68%",
+            scrub: 0.25,
+            invalidateOnRefresh: true,
+            onRefresh: (self) => updateForProgress(self.progress),
+            onUpdate: (self) => updateForProgress(self.progress),
+          });
+
+          try {
+            ScrollTrigger.refresh();
+          } catch {
+            // Ignore layout refresh errors during unmount
+          }
+        }, root);
+
+        revert = () => {
+          try {
+            ctx.revert();
+          } catch {
+            // Ignore GSAP context cleanup race
+          }
+          try {
+            ScrollTrigger.getById("process-steps")?.kill();
+          } catch {
+            // Ignore ScrollTrigger cleanup race
+          }
         };
-
-        updateForProgress(0);
-
-        ScrollTrigger.create({
-          id: "process-steps",
-          trigger: mainEl,
-          start: "top 68%",
-          end: "bottom 68%",
-          scrub: 0.25,
-          invalidateOnRefresh: true,
-          onRefresh: (self) => updateForProgress(self.progress),
-          onUpdate: (self) => updateForProgress(self.progress),
-        });
-
-        ScrollTrigger.refresh();
-      }, root);
-
-      revert = () => {
-        ctx.revert();
-        ScrollTrigger.getById("process-steps")?.kill();
-      };
-    });
+      })
+      .catch(() => {});
 
     return () => {
       cancelled = true;

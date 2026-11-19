@@ -35,20 +35,24 @@ function PortalLogin() {
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/portal/dashboard", replace: true });
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (data.session) void navigate({ to: "/portal/dashboard", replace: true });
+      })
+      .catch(() => {});
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) navigate({ to: "/portal/dashboard", replace: true });
+      if (event === "SIGNED_IN" && session)
+        void navigate({ to: "/portal/dashboard", replace: true });
     });
-    return () => sub.subscription.unsubscribe();
+    return () => sub?.subscription?.unsubscribe();
   }, [navigate]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const v = value.trim();
     if (v.toUpperCase() === "DEMO") {
-      navigate({ to: "/portal/demo" });
+      void navigate({ to: "/portal/demo" });
       return;
     }
     const parsed = z.string().email().max(255).safeParse(v);
@@ -58,16 +62,21 @@ function PortalLogin() {
     }
     setError("");
     setState("sending");
-    const { error: err } = await supabase.auth.signInWithOtp({
-      email: parsed.data.toLowerCase(),
-      options: { emailRedirectTo: `${window.location.origin}/portal` },
-    });
-    if (err) {
+    try {
+      const { error: err } = await supabase.auth.signInWithOtp({
+        email: parsed.data.toLowerCase(),
+        options: { emailRedirectTo: `${window.location.origin}/portal` },
+      });
+      if (err) {
+        setState("idle");
+        setError("We could not send the sign-in link. Please try again in a minute.");
+        return;
+      }
+      setState("sent");
+    } catch {
       setState("idle");
       setError("We could not send the sign-in link. Please try again in a minute.");
-      return;
     }
-    setState("sent");
   }
 
   return (

@@ -2,8 +2,8 @@ import { site } from "@/config/site";
 import type { FaqItem } from "@/content/faq";
 
 export const ogImage = {
-  webp: `${site.siteUrl}/og/incodet-og.webp`,
-  png: `${site.siteUrl}/og/incodet-og.png`,
+  webp: `${site.siteUrl}/brand/og-image.png`,
+  png: `${site.siteUrl}/brand/og-image.png`,
   alt: "Incodet: High-Converting Websites, Built-In CRM & 24/7 AI Voice Calling Agents",
 };
 
@@ -47,8 +47,8 @@ export function seoHead(
       { property: "og:type", content: opts.type ?? "website" },
       { property: "og:url", content: url },
       { property: "og:site_name", content: site.name },
-      { property: "og:image", content: ogImage.webp },
-      { property: "og:image:type", content: "image/webp" },
+      { property: "og:image", content: ogImage.png },
+      { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: ogImage.alt },
@@ -170,7 +170,7 @@ export function organizationLd() {
       "@context": "https://schema.org",
       "@type": "Organization",
       "@id": `${site.siteUrl}/#organization`,
-      logo: `${site.siteUrl}/apple-touch-icon.png`,
+      logo: `${site.siteUrl}/brand/apple-touch-icon.png`,
       ...base,
     }),
     jsonLd({
