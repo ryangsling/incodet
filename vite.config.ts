@@ -61,7 +61,15 @@ export default defineConfig(({ command, mode }) => {
       }),
       // Nitro builds the deployable server. Default target is Cloudflare;
       // set NITRO_PRESET (for example NITRO_PRESET=vercel) to build for another host.
-      ...(command === "build" ? [nitro({ defaultPreset: "cloudflare-module" })] : []),
+      ...(command === "build"
+        ? [
+            nitro({
+              defaultPreset: "cloudflare-module",
+              // keep_vars: plaintext vars set on the Worker are not wiped by later deploys.
+              cloudflare: { wrangler: { name: "incodet", keep_vars: true } },
+            }),
+          ]
+        : []),
       viteReact(),
     ],
     define: envDefine,

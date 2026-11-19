@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as BookingRouteImport } from './routes/booking'
 import { Route as CustomSoftwareRouteImport } from './routes/custom-software'
 import { Route as DeckRouteImport } from './routes/deck'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -65,6 +66,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomSoftwareRoute = CustomSoftwareRouteImport.update({
@@ -282,6 +288,7 @@ const AuthenticatedPortalDashboardRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
+  '/booking': typeof BookingRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/deck': typeof DeckRoute
   '/pricing': typeof PricingRoute
@@ -326,6 +333,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
+  '/booking': typeof BookingRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/deck': typeof DeckRoute
   '/pricing': typeof PricingRoute
@@ -371,6 +379,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/book': typeof BookRoute
+  '/booking': typeof BookingRoute
   '/custom-software': typeof CustomSoftwareRoute
   '/deck': typeof DeckRoute
   '/pricing': typeof PricingRoute
@@ -417,6 +426,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/book'
+    | '/booking'
     | '/custom-software'
     | '/deck'
     | '/pricing'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/book'
+    | '/booking'
     | '/custom-software'
     | '/deck'
     | '/pricing'
@@ -505,6 +516,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/book'
+    | '/booking'
     | '/custom-software'
     | '/deck'
     | '/pricing'
@@ -551,6 +563,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BookRoute: typeof BookRoute
+  BookingRoute: typeof BookingRoute
   CustomSoftwareRoute: typeof CustomSoftwareRoute
   DeckRoute: typeof DeckRoute
   PricingRoute: typeof PricingRoute
@@ -606,6 +619,13 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/custom-software': {
@@ -929,6 +949,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BookRoute: BookRoute,
+  BookingRoute: BookingRoute,
   CustomSoftwareRoute: CustomSoftwareRoute,
   DeckRoute: DeckRoute,
   PricingRoute: PricingRoute,
